@@ -103,12 +103,9 @@ export default function Sidebar() {//接受一个名为user的prop
                 selectedKeys={[selectedKey]}
                 style={{ height: '100%', borderRight: 0}}
                 onClick={handleMenuClick}
-            >
-                {/*通过map遍历的方式生成了每个菜单项*/}
-                {navMenuItems.map(item => (
-                    <Menu.Item key={item.key}>{item.label}</Menu.Item>
-                ))}
-            </Menu>
+                items={navMenuItems.map(item => ({ key: item.key, label: item.label }))}
+            />
+
             {/*{user && (*/}
             //用户下拉菜单，待实现
             {/*    <Dropdown*/}

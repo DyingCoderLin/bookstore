@@ -11,9 +11,9 @@ function App() {
       algorithm: theme.defaultAlgorithm,
       token: themeToken
   }}>
-      <BookCart> {/* 将整个应用包裹在 BookCart 组件中 */}
+      {/*<BookCart> /!* 将整个应用包裹在 BookCart 组件中 *!/*/}
               <AppRouter />
-      </BookCart>
+      {/*</BookCart>*/}
   </ConfigProvider>
 }
 

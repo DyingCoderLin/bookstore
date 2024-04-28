@@ -5,8 +5,10 @@
 "    include"：总是包含凭据，即始终发送 cookie 等凭据。
  */
 export async function getJson(url) {
+    // alert(url);
     let res = await fetch(url, { method: "GET", credentials: "include" });
     //解析响应的json数据并返回
+    //res.json只能取一次
     return res.json();
 }
 

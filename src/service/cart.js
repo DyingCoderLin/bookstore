@@ -2,14 +2,17 @@ import { DUMMY_RESPONSE, PREFIX, del, getJson, put } from "./common";
 
 export async function getCartItems() {
     const url = `${PREFIX}/cart`;//设置url
+    // alert(url);
     let cartItems;
     try {
         //向后端发起请求获得cart内容
         cartItems = await getJson(url);
+        // console.log("normal", cartItems);
     } catch (e) {
-        console.log(e);
+        console.log("getCartItems error", e);
         cartItems = []
     }
+    // alert(cartItems);
     return cartItems;
 }
 
