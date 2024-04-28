@@ -1,0 +1,57 @@
+.login-bg{
+    background-image: url('/public/myImages/photo2.jpg');
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+.top-bar {
+    background-color: #50768C;
+    color: white;
+    padding: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.center-text {
+    font-size: 20px;
+    font-family: Arial, sans-serif;
+    align-items: center;
+    display: flex;
+}
+
+.picInTopbar {
+    /*background-image: url("/public/myImages/yaoyao.png");*/
+    width: 40px;
+}
+
+.editable-label {
+    cursor: pointer;
+}
+
+.user-info {
+    display: flex;
+    align-items: center;
+}
+
+.user-info img {
+    border-radius: 50%;
+    margin-right: 10px;
+}
+
+.nav-text{
+    color: white;
+    font-size: 25px;
+    font-family: Arial, sans-serif;
+    margin-right: 10px;
+}
+
+
+#myCard{
+    /*background-color: rgba(0,0,0,0.2)!important;*/
+    color: transparent!important;
+}
+
+.custom-meta .ant-card-meta-title {
+    white-space: pre-line;
+}

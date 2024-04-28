@@ -1,0 +1,86 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-image: url("/public/myImages/photo2.jpg"); /* 使用自定义背景图片 */
+    background-size: cover; /* 背景图片填充整个屏幕 */
+    background-repeat: no-repeat;
+    background-position: right top;
+    background-attachment: scroll;
+}
+
+/* 登录页面样式 */
+.login-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+.login-box h2 {
+    text-align: center;
+    font-family: Arial, sans-serif;
+    font-size: 40px;
+}
+
+.login-box {
+    width: 500px;
+    height: 400px;
+    padding: 20px;
+    background-color: rgba(255, 255, 255, 0.5);
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.name {
+    font-family: Arial, sans-serif;
+    font-size: 20px;
+}
+
+.login-box h2 {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.input-group {
+    margin-bottom: 20px;
+    margin-left: 40px;
+    margin-right: 40px;
+    font-size: 20px;
+}
+
+.input-group input {
+    width: 100%;
+    padding: 10px;
+    font-size: 18px; /* 调整输入框的字体大小 */
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-sizing: border-box;
+}
+
+.input-group label {
+    display: block;
+    margin-bottom: 5px;
+}
+
+.input-group input {
+    padding: 10px;
+    width: calc(100% - 20px);
+    border-radius: 5px;
+    border: 1px solid #ccc;
+}
+
+.button {
+    padding: 10px 40px;
+    background-color: rgb(54, 54, 54); /* 修改按钮颜色 */
+    color: #fff;
+    font-size: 20px;
+    font-family: Arial, sans-serif;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    width: calc(100% - 80px);
+    margin-left: 40px;
+    margin-right: 40px;
+    margin-top: 20px;
+}
