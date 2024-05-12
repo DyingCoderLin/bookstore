@@ -21,10 +21,6 @@ public class CartItemService {
         return cartItemRepository.findAll();
     }
 
-    public CartItem findByCartItemId(Integer cartItemId) {
-        return cartItemRepository.findById(cartItemId).orElse(null);
-    }
-
     public void save(CartItem cartItem) {
         cartItemRepository.save(cartItem);
     }
@@ -36,5 +32,9 @@ public class CartItemService {
     public void delete(CartItem cartItem) {
         cartItem.detach();
         cartItemRepository.delete(cartItem);
+    }
+
+    public CartItem findByCartItemId(Integer cartItemID) {
+        return cartItemRepository.findByCartItemID(cartItemID);
     }
 }

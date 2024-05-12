@@ -88,6 +88,7 @@ public class CartItemController {
         for(CartItem cartItem : cartItems){
             if(cartItem.getCartItemID() == cartItemID){
                 cartItem.setQuantity(quantity);
+                cartItem.setPrice(cartItem.getBook().getPrice() * quantity);
                 cartItemService.save(cartItem);
                 return new Response(200, "修改成功");
             }

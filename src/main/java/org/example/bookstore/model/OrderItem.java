@@ -8,6 +8,7 @@ public class OrderItem {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "order_item_id")
     private Integer OrderItemID;
 
     @Column(name = "quantity")
@@ -15,6 +16,12 @@ public class OrderItem {
 
     @Column(name = "price")
     private Integer price;
+
+    @Column(name = "title")
+    private String title;
+
+    @Column(name = "img")
+    private String img;
 
     @ManyToOne(fetch = FetchType.LAZY,cascade = CascadeType.DETACH)
     @JoinColumn(name = "book_id")
@@ -27,10 +34,12 @@ public class OrderItem {
     public OrderItem() {
     }
 
-    public OrderItem(Integer quantity, Integer price, Book book, Order order) {
+    public OrderItem(Integer quantity, Integer price, String title, String img, Book order_book, Order order) {
         this.quantity = quantity;
         this.price = price;
-        this.order_book = book;
+        this.title = title;
+        this.img = img;
+        this.order_book = order_book;
         this.order = order;
     }
 
@@ -40,6 +49,8 @@ public class OrderItem {
     public Integer getPrice() { return price; }
     public Book getBook() { return order_book; }
     public Order getOrder() { return order; }
+    public String getTitle() { return title; }
+    public String getImg() { return img; }
 
     // setters
     public void setOrderItemID(Integer OrderItemID) { this.OrderItemID = OrderItemID; }
@@ -47,4 +58,6 @@ public class OrderItem {
     public void setPrice(Integer price) { this.price = price; }
     public void setBook(Book book) { this.order_book = book; }
     public void setOrder(Order order) { this.order = order; }
+    public void setTitle(String title) { this.title = title; }
+    public void setImg(String img) { this.img = img; }
 }

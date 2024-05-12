@@ -7,6 +7,8 @@ import org.slf4j.Logger;
 import org.springframework.stereotype.Service;
 import org.example.bookstore.model.*;
 
+import java.util.List;
+
 @Service
 public class UserService {
     private final UserRepository userRepository;
@@ -30,4 +32,5 @@ public class UserService {
             return new Response(400, "用户名或密码错误");
         }
     }
+
 }

@@ -5,10 +5,7 @@ import org.example.bookstore.service.*;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
 
@@ -26,6 +23,14 @@ public class UserController {
         String userID = (String) loginRequest.get("username");
         String password = (String) loginRequest.get("password");
         return userService.login(userID, password);
+    }
+
+    @GetMapping("/getUser")
+    public UserData getUser(@CookieValue(value = "userID", required = false) String userID) {
+        final Logger log = org.slf4j.LoggerFactory.getLogger(UserController.class);
+        log.info("Get User Request");
+        UserData userData = new UserData(userService.findByUserID(userID));
+        return userData;
     }
 
 }

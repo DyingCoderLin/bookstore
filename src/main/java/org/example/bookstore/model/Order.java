@@ -3,9 +3,13 @@ package org.example.bookstore.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
+import java.sql.Date;
+import java.util.List;
+
 @Entity
 @Table(name = "orders")
 public class Order {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "orderid")
@@ -24,7 +28,7 @@ public class Order {
     private Integer totalPrice;
 
     @Column(name = "order_date")
-    private String orderDate;
+    private Date orderDate;
 
     @ManyToOne(fetch = FetchType.LAZY,cascade = CascadeType.DETACH)
     @JoinColumn(name = "user_id")
@@ -32,12 +36,12 @@ public class Order {
 
     @JsonIgnore
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private java.util.List<OrderItem> orderItems;
+    private List<OrderItem> orderItems;
 
     public Order() {
     }
 
-    public Order(String address, String receiver, String tel, Integer totalPrice, String orderDate, User user) {
+    public Order(String address, String receiver, String tel, Integer totalPrice, Date orderDate, User user) {
         this.address = address;
         this.receiver = receiver;
         this.tel = tel;
@@ -52,8 +56,9 @@ public class Order {
     public String getReceiver() { return receiver; }
     public String getTel() { return tel; }
     public Integer getTotalPrice() { return totalPrice; }
-    public String getOrderDate() { return orderDate; }
+    public Date getOrderDate() { return orderDate; }
     public User getUser() { return order_user; }
+    public List<OrderItem> getOrderItems() { return orderItems; }
 
     // setters
     public void setOrderID(Integer orderID) { this.orderID = orderID; }
@@ -61,7 +66,7 @@ public class Order {
     public void setReceiver(String receiver) { this.receiver = receiver; }
     public void setTel(String tel) { this.tel = tel; }
     public void setTotalPrice(Integer totalPrice) { this.totalPrice = totalPrice; }
-    public void setOrderDate(String orderDate) { this.orderDate = orderDate; }
+    public void setOrderDate(Date orderDate) { this.orderDate = orderDate; }
     public void setUser(User user) { this.order_user = user; }
 
 }

@@ -23,12 +23,6 @@ public class CartItem {
     @Column(name = "title")
     private String title;
 
-    @Column(name = "book_id")
-    private Integer bookID;
-
-    @Column(name = "user_id")
-    private Integer userID;
-
     @ManyToOne(fetch = FetchType.LAZY,cascade = CascadeType.DETACH)
     @JoinColumn(name = "book_id")
     private Book cart_book;
@@ -56,8 +50,6 @@ public class CartItem {
     public User getCart_user() { return cart_user; }
     public String getImg() { return img; }
     public String getTitle() { return title; }
-    public Integer getBookID() { return bookID; }
-    public Integer getUserID() { return userID; }
 
     // setters
     public void setCartItemID(Integer cartItemID) { this.cartItemID = cartItemID; }

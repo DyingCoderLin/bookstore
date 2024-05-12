@@ -1,5 +1,6 @@
 package org.example.bookstore.repository;
 
+import org.example.bookstore.model.CartItem;
 import org.example.bookstore.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
