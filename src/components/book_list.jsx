@@ -1,7 +1,7 @@
 import { List, Card } from 'antd';
 import BookCard from "./book_card";
 
-export default function Booklist({ books }) {
+export default function Booklist({books}) {
     return (
         <>
             {books.length === 0 ? (

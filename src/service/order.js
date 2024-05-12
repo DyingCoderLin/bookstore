@@ -5,12 +5,13 @@ export async function placeOrder(orderInfo) {
     console.log(orderInfo);
     let res;
     try {
-        res = post(url, orderInfo);
+        res = await post(url, orderInfo);
+        console.log(res.ok);
     } catch (e) {
         console.log(e);
-        res = DUMMY_RESPONSE;
     }
-
+    // console.log("res",res);
+    // console.log("res",res.ok);
     return res;
 }
 

@@ -1,12 +1,13 @@
 import React, {useState,useEffect} from "react";
-import {Button, Card, Space, Table,Input,Checkbox} from "antd";
+import {Button, Card, Space, Table,Input,Checkbox,message} from "antd";
 // import { BookCartContext } from './bookCartContext';
 import { SearchOutlined, DeleteOutlined, PlusOutlined, MinusOutlined } from '@ant-design/icons';
 // import {cartData} from "../App";
 import PlaceOrderModal from "./place_order_modal";
 import useMessage from "antd/es/message/useMessage";
-import {deleteCartItem} from "../service/cart";
+import {changeCartItemNumber, deleteCartItem} from "../service/cart";
 import {handleBaseApiResponse} from "../utils/message";
+import {isOK} from "../utils/myUtils";
 
 const { Column,ColumnGroup } = Table;
 const { Search } = Input;
@@ -14,7 +15,7 @@ const { Search } = Input;
 export default function Cart_item_table({cartItems,onMutate}) {
     const [messageApi,contextHolder] = useMessage();
     const [data, setData] = useState(cartItems);//用于处理要显示哪些信息
-    const [selectBooks,setSelectBooks] = useState([]);//用于处理哪些书籍被选中
+    const [selectCartItems,setSelectCartItems] = useState([]);//用于处理哪些书籍被选中
     const [showModal, setShowModal] = useState(false);
 
     // 用于处理搜索功能，只显示title里有被搜索的部分的书籍
@@ -29,17 +30,15 @@ export default function Cart_item_table({cartItems,onMutate}) {
         setData(filteredData);
     };
 
-    const handleDelete = async(itemId) => {
+    const handleDelete = async (itemId) => {
+        console.log(itemId);
         // 使用 deleteCartItem 函数删除购物车商品，并获取响应
         let res = await deleteCartItem(itemId);
         // 使用 handleBaseApiResponse 函数处理响应，并传入相应的消息 API 和 onMutate 函数
-        handleBaseApiResponse(res,messageApi);
         // 在这里处理删除购物车商品的逻辑
-        console.log(`删除书籍ID为${itemId}的商品`);
+        // console.log(`删除书籍ID为${itemId}的商品`);
         // 如果删除成功，选中的商品列表也需要被更新
-        if (res.ok) {
-            setSelectBooks(selectBooks.filter(item => item.id !== itemId));
-        }
+        handleBaseApiResponse(res,messageApi,onMutate);
     };
 
     // 当 cartItems 发生变化时，更新 data 状态为新的cartItems
@@ -48,18 +47,27 @@ export default function Cart_item_table({cartItems,onMutate}) {
     } , [cartItems]);
 
     const handleOpenModal = () => {
-        if(selectBooks.length === 0) {
+        if(selectCartItems.length === 0) {
             alert("请先选择要购买的书籍");
             return;
         }
-        console.log(selectBooks.length);
+        console.log(selectCartItems.length);
             setShowModal(true);
     }
 
     const handleOrderSubmit = () => {
-        console.log("下单");
-        setShowModal(false);
-        onMutate();
+        console.log("order submit");
+
+        // 在消息通知中显示订单提交成功，并包含倒计时信息
+        message.success({
+            content: `订单提交成功！`,
+            duration: 2, // 持续时间为 3 秒
+            onClose: () => {
+                // 关闭弹窗并执行 onMutate 函数
+                setShowModal(false);
+                onMutate();
+            },
+        });
     }
 
     const handleCloseModal = () => {
@@ -69,37 +77,51 @@ export default function Cart_item_table({cartItems,onMutate}) {
     //在选中了一系列书籍并提交订单时，计算总价格
     const computeTotalPrice = () => {
         let totalPrice = 0;
-        for (let book of selectBooks) {
+        for (let book of selectCartItems) {
             totalPrice += book.price * book.quantity;
         }
         return totalPrice;
     }
 
-    const handleQuantityChange = (book, mode) => {
-            const existingBookIndex = data.findIndex(item => item.id === book.id);
-            if (existingBookIndex !== -1) {
-                const updatedCart = [...data];
-                if(mode)
-                data[existingBookIndex].quantity += 1;
-                else data[existingBookIndex].quantity = Math.max(0,data[existingBookIndex].quantity - 1);
-                setData(updatedCart);
-            } else {
-                // 如果购物车中不存在相同的书籍，添加新的书籍到购物车
-                alert("a fatal fault, missing book");
-            }
+    const handleQuantityChange = async (book, mode) => {
+        console.log(book.cartItemID);
+        let res;
+        if(mode){
+            console.log("add");
+            res = await changeCartItemNumber(book.cartItemID,book.quantity + 1);
+        }
+        else{
+            console.log("minus");
+            res = await changeCartItemNumber(book.cartItemID,book.quantity - 1);
+        }
+        if(isOK(res.code)){
+            onMutate();
+        }
+        // handleBaseApiResponse(res,messageApi,onMutate);
+            // const existingBookIndex = data.findIndex(item => item.id === book.id);
+            // if (existingBookIndex !== -1) {
+            //     const updatedCart = [...data];
+            //     if(mode)
+            //     data[existingBookIndex].quantity += 1;
+            //     else data[existingBookIndex].quantity = Math.max(0,data[existingBookIndex].quantity - 1);
+            //     setData(updatedCart);
+            // } else {
+            //     // 如果购物车中不存在相同的书籍，添加新的书籍到购物车
+            //     alert("a fatal fault, missing book");
+            // }
     };
 
     const handleCheckboxChange = (record, checked) => {
         if (checked) {
-            setSelectBooks([...selectBooks, record]);
+            setSelectCartItems([...selectCartItems, record]);
         } else {
-            setSelectBooks(selectBooks.filter(book => book.id !== record.id));
+            setSelectCartItems(selectCartItems.filter(item => item.cartItemID !== record.cartItemID));
         }
     };
 
     return <>
         {contextHolder}
-        {showModal && <PlaceOrderModal onCancel={handleCloseModal} selectBooks={selectBooks} onOk={handleOrderSubmit} />}
+        {showModal && <PlaceOrderModal onCancel={handleCloseModal} selectBooks={selectCartItems} onOk={handleOrderSubmit} />}
         <Card id="myCard" className="card-container"
               style={{marginLeft: '200px', padding: 2, backgroundColor: 'rgba(255,255,255,0.4)'}}>
             <Space direction="vertical" size="large" style={{width: "100%"}}>
@@ -123,7 +145,7 @@ export default function Cart_item_table({cartItems,onMutate}) {
                                 render={(_, record) => (
                                     <Checkbox
                                         style={{width: '20px', height: '20px', border: '2px solid #000000'}}
-                                        checked={selectBooks.some(book => book.id === record.id)}
+                                        checked={selectCartItems.some(item => item.cartItemID === record.cartItemID)}
                                         onChange={e => handleCheckboxChange(record, e.target.checked)}
                                     />
                                 )}
@@ -180,7 +202,7 @@ export default function Cart_item_table({cartItems,onMutate}) {
                                     type="link"
                                     danger
                                     icon={<DeleteOutlined/>}
-                                    onClick={() => handleDelete(record.id)}
+                                    onClick={() => handleDelete(record.cartItemID)}
                                     style={{fontSize: '1.2rem'}}
                                 >
                                     删除

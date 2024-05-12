@@ -5,7 +5,10 @@ import { useEffect, useState } from "react";
 import {BookLayout} from "../components/layout";
 
 export default function BookPage() {
-
+    // console.log("BookPage");
+    useEffect(() => {
+        console.log("BookPage useEffect")
+    }, []);
     return <BookLayout>
     </BookLayout>
 }

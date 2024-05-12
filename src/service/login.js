@@ -1,21 +1,17 @@
-import {Users} from "../App";
-
+import {post,PREFIX} from "./common";
 
 export async function login(username, password) {
-    // const response = await fetch("http://localhost:8080/login", {
-    //     method: "POST",
-    //     headers: {
-    //         "Content-Type": "application/json"
-    //     },
-    //     body: JSON.stringify({ username, password })
-    // });
-    // return await response.json();
-    for (let i = 0; i < Users.length; i++) {
-        if (Users[i].username === username && Users[i].password === password) {
-            // alert("Login successful");
-            return true;
+    const url = `${PREFIX}/login`;
+    let result;
+    try {
+        result = await post(url, { username, password });
+    } catch (e) {
+        console.log(e);
+        result = {
+            ok: false,
+            message: "网络错误！",
         }
     }
-    return false;
+    return result;
     // return { status: 401, message: "Login failed" };
 }

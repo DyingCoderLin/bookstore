@@ -1,13 +1,14 @@
 import React, { useState,useEffect } from 'react';
 import Cart_item_table from "./cart_item_table";
-import { getCartItems } from '../service/cart';
+import { getAllCartItems} from '../service/cart';
 
 export default function CartContent() {
     const [cartItems, setCartItems] = useState([]);
 
     const initCartItems = async () => {
-        let loadCartItems = await getCartItems();
+        let loadCartItems = await getAllCartItems();
         setCartItems(loadCartItems);
+        console.log("loadCartItems",loadCartItems);
     }
 
     useEffect(() => {

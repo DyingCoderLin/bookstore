@@ -2,16 +2,31 @@ import { Card, Input, Space } from 'antd';
 import React, { useEffect, useState } from 'react';
 import '../css/global.css';
 import BookList from "./book_list";
-import {booksData} from "../App";
+// import {booksData} from "../App";
+import {getAllBooks} from "../service/book";
+
 const { Search } = Input;
 
 export default function MainContent() {
     const [books, setBooks] = useState([]);
+    const [booksData, setBooksData] = useState([]); // 保存所有书籍数据
+
+    async function getBooks() {
+        let data = await getAllBooks(); // 调用后端 API 获取书籍数据
+        let books = data;
+        setBooksData(books); // 保存所有书籍数据（不会变化的数据
+        // console.log(booksData);
+        setBooks(books);
+    }
+
     useEffect(() => {
-        setBooks(booksData);
+        // console.log("mainlog");
+        getBooks();
     }, []);
+
     const onSearch = (value) => {
         if (!value) {
+            console.log(booksData);
             setBooks(booksData); // 如果搜索内容为空，则显示所有书籍
         } else {
             const filteredBooks = booksData.filter(book => book.title.includes(value)); // 使用 filter 方法过滤书籍列表

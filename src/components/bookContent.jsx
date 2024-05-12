@@ -1,18 +1,31 @@
-import React, { useContext } from 'react';
+import React, {useEffect ,useState} from 'react';
 import { Card, Button, Row, Col, Image, Typography, Divider, Space, Table } from 'antd';
 import '../css/global.css';
 import { getBookById } from "../service/book";
 import { useParams } from "react-router-dom";
-import { BookCartContext} from "./bookCartContext";// 导入BookCartContext
+import { addCartItem} from "../service/cart";
+import { BookCartContext} from "./bookCartContext";
+import {handleBaseApiResponse} from "../utils/message";
+import useMessage from "antd/es/message/useMessage";
+// 导入BookCartContext
 
 const { Title, Paragraph } = Typography;
 
 export default function BookContent() {
+    const [messageApi, contextHolder] = useMessage(); // 使用useMessage获取消息API
     let { id } = useParams(); // 从路由参数中获取id，它是字符串类型
-    const numericId = parseInt(id, 10); // 将字符串id转换为数字类型
-    const thisBook = getBookById(numericId); // 获取书籍信息
+    const [thisBook, setThisBook] = useState([]);
+    // const thisBook = getBookById(numericId); // 获取书籍信息
 
-    const { addToCart } = useContext(BookCartContext); // 使用useContext获取BookCartContext提供的上下文对象，并解构出addToCart函数
+    // const { addToCart } = useContext(BookCartContext); // 使用useContext获取BookCartContext提供的上下文对象，并解构出addToCart函数
+    const getBook = async () => {
+        let book = await getBookById( parseInt(id, 10));
+        setThisBook(book);
+    }
+
+    useEffect(() => {
+        getBook();
+    },[id]);
 
     // 返回按钮
     const goBack = () => {
@@ -60,8 +73,14 @@ export default function BookContent() {
         },
     ];
 
+    const addToCart = async (book) => {
+        const res = await addCartItem(book.id);
+        handleBaseApiResponse(res, messageApi);
+    }
+
     return (
         <Card id="myCard" className="card-container" style={{ marginLeft: '200px', padding: 2, backgroundColor: 'rgba(255,255,255,0.4)' }}>
+            {contextHolder}
             {/* 返回按钮 */}
             <Button type="primary" size="large" style={{ marginLeft: '10px', marginTop: '10px', marginBottom: '0px' }} onClick={() => goBack()}>
                 返回

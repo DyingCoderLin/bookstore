@@ -14,7 +14,7 @@ import { login } from "../service/login";
 import { handleBaseApiResponse } from "../utils/message";
 
 const LoginPage = () => {
-    // const [messageApi, contextHolder] = useMessage();
+    const [messageApi, contextHolder] = useMessage();
     const navigate = useNavigate();
 
     const onSubmit = async (event) => {
@@ -22,12 +22,13 @@ const LoginPage = () => {
         const username = document.getElementById("username").value;
         const password = document.getElementById("password").value;
         const response = await login(username, password);
-        if(response) navigate("/home");
-        else alert("Wrong username or password. Please try again.");
+        console.log(response);
+        handleBaseApiResponse(response, messageApi, () => navigate("/home"));
     };
 
     return (
                 <div className="login-container">
+                    {contextHolder}
                     <div className="login-box">
                         <h2>Login</h2>
                         <form action="Browser.html" method="get" id="login-form">

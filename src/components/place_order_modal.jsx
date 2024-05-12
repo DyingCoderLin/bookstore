@@ -21,8 +21,8 @@ export default function PlaceOrderModal({selectBooks, onOk, onCancel }) {
             itemIds: selectBooks.map(item => item.id)
         }
         let res = await placeOrder(orderInfo);
-
-        // handleBaseApiResponse(res, messageApi, onOk);
+        // console.log("here");
+        handleBaseApiResponse(res, messageApi, onOk);
     };
 
     const columns = [

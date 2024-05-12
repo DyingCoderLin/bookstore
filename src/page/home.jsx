@@ -26,6 +26,7 @@ export default function HomePage() {
     };
 
     useEffect(() => {
+        // console.log("homelog");
         getBooks();
     }, [keyword, pageIndex, pageSize])
 
