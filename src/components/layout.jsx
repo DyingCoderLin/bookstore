@@ -12,6 +12,7 @@ import BookContent from "./bookContent";
 import CartContent from "./cartContent";
 import UserContent from "./userContent";
 import BookCart from "./bookCartContext";
+import OrderContent from "./orderContent";
 
 export function BasicLayout({ children }) {
     // const [user, setUser] = useState(null);
@@ -145,6 +146,28 @@ export function UserLayout({ children }) {
                     <NavBar/>
 
                     <UserContent />
+                </Content>
+            </Layout>
+        </Layout>
+    )
+}
+
+export function OrderLayout({ children }) {
+    // const [user, setUser] = useState(null);
+    // const navigate = useNavigate();
+    const HeaderPlaceholder = () => <div style={{ height: '64px' }} />;
+    const SidebarPlaceholder = () => <div style={{ width: '200px' }} />; // 添加一个宽度为200px的占位符
+
+    return (
+        <Layout className="basic-layout" style={{ background: 'transparent' }}>
+            <Topbar />
+            <HeaderPlaceholder />
+            <Layout style={{background:'transparent'}}>
+                <SidebarPlaceholder />
+                <Content style={{background:'transparent'}}>
+                    <NavBar/>
+
+                    <OrderContent />
                 </Content>
             </Layout>
         </Layout>

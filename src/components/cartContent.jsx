@@ -8,7 +8,7 @@ export default function CartContent() {
     const initCartItems = async () => {
         let loadCartItems = await getAllCartItems();
         setCartItems(loadCartItems);
-        console.log("loadCartItems",loadCartItems);
+        // console.log("loadCartItems",loadCartItems);
     }
 
     useEffect(() => {

@@ -1,10 +1,10 @@
-import React, { useState } from "react";
+import React, {useEffect, useState} from "react";
 import { Card, Descriptions, Row, Col, Input, Button } from 'antd';
-import { userData } from "../App";
+// import { userData } from "../App";
+import { getUser } from "../service/user";
 
 export default function UserContent() {
-    const initialUser = userData[0]; // 初始用户信息
-    const [editedUser, setEditedUser] = useState(initialUser); // 使用状态来存储编辑后的用户信息
+    const [editedUser, setEditedUser] = useState([]); // 使用状态来存储编辑后的用户信息
 
     // 处理输入框内容变化事件
     const handleInputChange = (key, value) => {
@@ -13,6 +13,15 @@ export default function UserContent() {
             [key]: value
         }));
     };
+
+    const initialUser = async () => {
+        let user = await getUser();
+        setEditedUser(user);
+    }
+
+    useEffect(() => {
+        initialUser();
+    }, []);
 
     // 处理保存按钮点击事件
     const handleSave = () => {
@@ -28,10 +37,10 @@ export default function UserContent() {
 
     const items = [
         { label: '姓名', children: <Input style={{ fontSize: '22px', background: 'transparent' }} value={editedUser.name} onChange={e => handleInputChange('name', e.target.value)} />, span: 2 },
-        { label: '昵称', children: <Input style={{ fontSize: '22px', background: 'transparent' }} value={editedUser.nickName} onChange={e => handleInputChange('nickName', e.target.value)} />, span: 2 },
-        { label: '余额', children: <Input style={{ fontSize: '22px', background: 'transparent' }} value={editedUser.balance} onChange={e => handleInputChange('balance', e.target.value)} />, span: 4 },
-        { label: '用户等级', children: <Input style={{ fontSize: '22px', background: 'transparent' }} value={editedUser.level} onChange={e => handleInputChange('level', e.target.value)} />, span: 2 },
-        { label: '联系方式', children: <Input style={{ fontSize: '22px', background: 'transparent' }} value={editedUser.contact} onChange={e => handleInputChange('contact', e.target.value)} />, span: { xl: 4, xxl: 4 } },
+        { label: '昵称', children: <Input style={{ fontSize: '22px', background: 'transparent' }} value={editedUser.nickname} onChange={e => handleInputChange('nickname', e.target.value)} />, span: 2 },
+        { label: '余额', children: <Input style={{ fontSize: '22px', background: 'transparent' }} value={`￥${editedUser.balance}`} onChange={e => handleInputChange('balance', e.target.value)} />, span: 4 },
+        { label: '用户等级', children: <Input style={{ fontSize: '22px', background: 'transparent' }} value={editedUser.userLevel} onChange={e => handleInputChange('userLevel', e.target.value)} />, span: 2 },
+        { label: '联系方式', children: <Input style={{ fontSize: '22px', background: 'transparent' }} value={editedUser.email} onChange={e => handleInputChange('email', e.target.value)} />, span: { xl: 4, xxl: 4 } },
         { label: '头像', span: 2, children: (
                 <div style={{display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
                     <img src={editedUser.avatar} style={{width: '100px', height: '100px'}}/>
@@ -39,7 +48,7 @@ export default function UserContent() {
                 </div>
             )
         },
-        { label: '个性化自述', children: <Input.TextArea style={{ fontSize: '22px', background: 'transparent' }} value={editedUser.description} onChange={e => handleInputChange('description', e.target.value)} />, span: {xl: 2, xxl: 2} },
+        { label: '个性化自述', children: <Input.TextArea style={{ fontSize: '22px', background: 'transparent' }} value={editedUser.selfIntro} onChange={e => handleInputChange('selfIntro', e.target.value)} />, span: {xl: 2, xxl: 2} },
     ];
 
     return (

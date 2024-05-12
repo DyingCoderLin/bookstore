@@ -1,12 +1,12 @@
 import { DUMMY_RESPONSE, PREFIX, getJson, post } from "./common";
 
 export async function placeOrder(orderInfo) {
-    const url = `${PREFIX}/order`;
+    const url = `${PREFIX}/placeOrder`;
     console.log(orderInfo);
     let res;
     try {
         res = await post(url, orderInfo);
-        console.log(res.ok);
+        // console.log(res.ok);
     } catch (e) {
         console.log(e);
     }
@@ -15,11 +15,12 @@ export async function placeOrder(orderInfo) {
     return res;
 }
 
-export async function getOrders() {
-    const url = `${PREFIX}/order`;
+export async function getAllOrders() {
+    const url = `${PREFIX}/getAllOrders`;
     let orders;
     try {
         orders = await getJson(url);
+        console.log(orders);
     } catch (e) {
         console.log(e);
         orders = []

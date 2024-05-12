@@ -8,7 +8,7 @@ export async function getAllCartItems() {
     try {
         //向后端发起请求获得cart内容
         cartItems = await getJson(url);
-        console.log("normal", cartItems);
+        // console.log("normal", cartItems);
     } catch (e) {
         console.log("getCartItems error", e);
         cartItems = []

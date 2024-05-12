@@ -56,18 +56,8 @@ export default function Cart_item_table({cartItems,onMutate}) {
     }
 
     const handleOrderSubmit = () => {
-        console.log("order submit");
-
-        // 在消息通知中显示订单提交成功，并包含倒计时信息
-        message.success({
-            content: `订单提交成功！`,
-            duration: 2, // 持续时间为 3 秒
-            onClose: () => {
-                // 关闭弹窗并执行 onMutate 函数
-                setShowModal(false);
-                onMutate();
-            },
-        });
+        setShowModal(false);
+        onMutate();
     }
 
     const handleCloseModal = () => {
@@ -77,8 +67,8 @@ export default function Cart_item_table({cartItems,onMutate}) {
     //在选中了一系列书籍并提交订单时，计算总价格
     const computeTotalPrice = () => {
         let totalPrice = 0;
-        for (let book of selectCartItems) {
-            totalPrice += book.price * book.quantity;
+        for (let cartItem of selectCartItems) {
+            totalPrice += cartItem.price;
         }
         return totalPrice;
     }
@@ -158,14 +148,13 @@ export default function Cart_item_table({cartItems,onMutate}) {
                                 render={(img) => <img src={img} alt="Book cover" style={{width: 100}}/>}
                             />
                             <Column
-                                title="标题"
+                                title="书名"
                                 align={'center'}
                                 dataIndex='title'
                                 key="title"
                                 render={(text) => <span style={{fontSize: '1.2rem'}}>{text}</span>}
                             />
                         </ColumnGroup>
-
                         <Column
                             title="价格"
                             align={'center'}

@@ -18,8 +18,9 @@ export default function PlaceOrderModal({selectBooks, onOk, onCancel }) {
             address,
             receiver,
             tel,
-            itemIds: selectBooks.map(item => item.id)
+            cartItemIds: selectBooks.map(item => item.cartItemID)
         }
+        console.log(orderInfo);
         let res = await placeOrder(orderInfo);
         // console.log("here");
         handleBaseApiResponse(res, messageApi, onOk);
@@ -27,20 +28,20 @@ export default function PlaceOrderModal({selectBooks, onOk, onCancel }) {
 
     const columns = [
         {
-            title: '标题',
+            title: '书名',
             dataIndex: 'title',
             key: 'title',
-        },
-        {
-            title: '作者',
-            dataIndex: 'author',
-            key: 'author',
         },
         {
             title: '购买量',
             dataIndex: 'quantity',
             key: 'quantity',
         },
+        {
+            title: '价格',
+            dataIndex: 'price',
+            key: 'price',
+        }
     ];
 
     return (

@@ -1,11 +1,22 @@
 import React from 'react';
 import '../css/global.css';
 import { Layout } from 'antd';
-import {userData} from "../App";
+import {useEffect,useState} from "react";
+import {getUser} from "../service/user";
 
 const { Header } = Layout;
 
 export default function Topbar() {
+    const [userData, setUserData] = useState([]);
+    const initialUser = async () => {
+        let user = await getUser();
+        setUserData(user);
+        console.log(user);
+    }
+    useEffect(() => {
+        initialUser();
+    }, []);
+
     return (
         <Header className="top-bar"  style={{ position: 'fixed', width: '100%', zIndex: 1000 }}>
             <div>
@@ -17,10 +28,10 @@ export default function Topbar() {
                 </label>
             </div>
             <div className="user-info">
-                <img src={userData[0].avatar} className="picInTopbar" alt="头像"
+                <img src={userData.avatar} className="picInTopbar" alt="头像"
                      width="486"/>
                 <label className="editable-label"
-                       style={{fontSize: '20px', fontFamily: 'Arial, sans-serif'}}>用户名：{userData[0].nickName}</label>
+                       style={{fontSize: '20px', fontFamily: 'Arial, sans-serif'}}>用户名：{userData.nickname}</label>
             </div>
         </Header>
     )
