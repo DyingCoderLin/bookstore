@@ -1,11 +1,12 @@
 package org.example.bookstore.controllers;
 
-import org.example.bookstore.model.*;
+import jakarta.servlet.http.HttpSession;
 import org.example.bookstore.service.*;
+import org.example.bookstore.utils.MyUtils;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.example.bookstore.dto.*;
 
 import java.util.Map;
 
@@ -26,11 +27,20 @@ public class UserController {
     }
 
     @GetMapping("/getUser")
-    public UserData getUser(@CookieValue(value = "userID", required = false) String userID) {
+    public UserDTO getUser() {
         final Logger log = org.slf4j.LoggerFactory.getLogger(UserController.class);
-        log.info("Get User Request");
-        UserData userData = new UserData(userService.findByUserID(userID));
-        return userData;
+        HttpSession session = MyUtils.getSession();
+        String userID = (String) session.getAttribute("userID");
+        log.info("Get User Request from : " + userID);
+        UserDTO userDTO = new UserDTO(userService.findByUserID(userID));
+        return userDTO;
+    }
+
+    @PostMapping("/register")
+    public Response register(@RequestBody Map<String,Object> registerRequest) {
+        String userID = (String) registerRequest.get("username");
+        String password = (String) registerRequest.get("password");
+        return userService.register(userID, password);
     }
 
 }

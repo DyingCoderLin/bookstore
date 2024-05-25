@@ -1,31 +1,16 @@
 package org.example.bookstore.service;
 
-import org.example.bookstore.model.Book;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.example.bookstore.repository.BookRepository;
+import org.example.bookstore.dto.BookDTO;
+import org.example.bookstore.entity.Book;
+
 import java.util.List;
 
+public interface BookService {
 
-@Service
-public class BookService {
+    public List<BookDTO> findAll();
 
-    private final BookRepository bookRepository;
+    public Book findByBookId(Integer bookID);
 
-    public BookService(BookRepository bookRepository) {
-        this.bookRepository = bookRepository;
-    }
-
-    public List<Book> findAll() {
-        return bookRepository.findAll();
-    }
-
-    public Book findByBookId(Integer bookID) {
-        return bookRepository.findByBookID(bookID);
-    }
-
-    public Book save(Book book) {
-        return bookRepository.save(book);
-    }
+    public Book save(Book book);
 
 }

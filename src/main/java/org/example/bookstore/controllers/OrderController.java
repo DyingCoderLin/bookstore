@@ -1,14 +1,17 @@
 package org.example.bookstore.controllers;
 
-import org.example.bookstore.model.Response;
+import jakarta.servlet.http.HttpSession;
+import org.example.bookstore.utils.MyUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.example.bookstore.service.*;
-import org.example.bookstore.model.*;
+import org.example.bookstore.entity.*;
+import org.example.bookstore.dto.*;
 
 import java.sql.Date;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.ArrayList;
@@ -29,9 +32,10 @@ public class OrderController {
     private CartItemService cartItemService;
 
     @PostMapping("/placeOrder")
-    public Response placeOrder(@CookieValue(value = "userID", required = false) String userID,
-                               @RequestBody Map<String, Object> orderInfo){
+    public Response placeOrder(@RequestBody Map<String, Object> orderInfo){
         final Logger log = LoggerFactory.getLogger(OrderController.class);
+        HttpSession session = MyUtils.getSession();
+        String userID = (String) session.getAttribute("userID");
         User user = userService.findByUserID(userID);
         String address = (String) orderInfo.get("address");
         String receiver = (String) orderInfo.get("receiver");
@@ -58,15 +62,21 @@ public class OrderController {
     }
 
     @GetMapping("/getAllOrders")
-    public List<OrderData> getAllOrders(@CookieValue(value = "userID", required = false) String userID){
+    public List<OrderDTO> getAllOrders(){
         final Logger log = LoggerFactory.getLogger(OrderController.class);
+        HttpSession session = MyUtils.getSession();
+        String userID = (String) session.getAttribute("userID");
         log.info(userID + " is querying Orders");
         User user = userService.findByUserID(userID);
-        List<OrderData> orders = new ArrayList<>();
+        List<OrderDTO> orders = new ArrayList<>();
+        //我想要从尾到头遍历user.getOrders()，但是不知道怎么做
         for(Order order : user.getOrders()){
             log.info("orderID: " + order.getOrderID());
-            OrderData orderData = new OrderData(order);
-            orders.add(orderData);
+            OrderDTO orderDTO = new OrderDTO(order);
+            orders.add(orderDTO);
+        }
+        if(orders.size() > 1) {
+            Collections.reverse(orders);
         }
         return orders;
     }

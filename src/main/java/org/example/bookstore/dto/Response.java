@@ -1,4 +1,4 @@
-package org.example.bookstore.model;
+package org.example.bookstore.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 
@@ -8,7 +8,6 @@ public class Response<T> {
     private Integer code;
     // 提示信息，如果出现问题前端可以获得提示
     private String message;
-    private String cookie;
     // 返回给前端的结果数据
     private T data;
 
@@ -46,28 +45,7 @@ public class Response<T> {
         this.data = data;
     }
 
-    public String getCookie() {
-        return cookie;
-    }
-
-    public void setCookie(String cookie) {
-        this.cookie = cookie;
-    }
-
-    public Response(Integer code, String message,String cookie) {
-        this.code = code;
-        this.message = message;
-        this.cookie = cookie;
-    }
-
-    public Response(Integer code, String message, String cookie,T data) {
-        this.code = code;
-        this.message = message;
-        this.cookie = cookie;
-        this.data = data;
-    }
-
-    public Response(Integer code, String message,T data) {
+    public Response(Integer code, String message, T data) {
         this.code = code;
         this.message = message;
         this.data = data;

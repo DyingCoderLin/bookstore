@@ -1,4 +1,4 @@
-package org.example.bookstore.model;
+package org.example.bookstore.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
@@ -59,11 +59,11 @@ public class Book {
     }
 
     // 添加 getters 和 setters
-    public long getId() {
+    public Integer getBookID() {
         return bookID;
     }
 
-    public void setId(Integer id) {
+    public void setBookID(Integer id) {
         this.bookID = id;
     }
 

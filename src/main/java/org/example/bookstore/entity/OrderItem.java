@@ -1,4 +1,4 @@
-package org.example.bookstore.model;
+package org.example.bookstore.entity;
 
 import jakarta.persistence.*;
 

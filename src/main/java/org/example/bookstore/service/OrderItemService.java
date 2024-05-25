@@ -1,20 +1,9 @@
 package org.example.bookstore.service;
 
-import org.example.bookstore.model.OrderItem;
-import org.example.bookstore.repository.OrderItemRepository;
-import org.springframework.stereotype.Service;
+import org.example.bookstore.entity.OrderItem;
 
-@Service
-public class OrderItemService {
+public interface OrderItemService {
 
-    private final OrderItemRepository orderItemRepository;
-
-    public OrderItemService(OrderItemRepository orderItemRepository) {
-        this.orderItemRepository = orderItemRepository;
-    }
-
-    public void save(OrderItem orderItem) {
-        orderItemRepository.save(orderItem);
-    }
+    public void save(OrderItem orderItem);
 
 }
