@@ -6,6 +6,7 @@ import BookPage from "../page/book";
 import CartPage from "../page/cart";
 import UserPage from "../page/user";
 import OrderPage from "../page/order";
+import RegisterPage from "../page/register";
 // import RankPage from "../page/rank";
 
 export default function AppRouter() {
@@ -19,8 +20,9 @@ export default function AppRouter() {
             {/*<Route index element={<BookPage />} />
             */}
             {/*定义了一个路由规则，当用户访问路径 /home 时，渲染 <HomePage /> 组件。*/}
+            <Route path="/register" element={<RegisterPage />} />
             <Route path="/home" element={<HomePage />} />
-            {/*<Route path="/login" element={<LoginPage />} />*/}
+            <Route path="/login" element={<LoginPage />} />
             {/*定义了一个动态路由规则，其中 :id 是一个占位符，表示书籍的唯一标识*/}
             <Route path="/book/:id" element={<BookPage />} />
             <Route path="/cart" element={<CartPage />} />

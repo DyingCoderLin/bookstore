@@ -74,7 +74,7 @@ export default function BookContent() {
     ];
 
     const addToCart = async (book) => {
-        const res = await addCartItem(book.id);
+        const res = await addCartItem(book.bookID);
         handleBaseApiResponse(res, messageApi);
     }
 

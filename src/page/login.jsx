@@ -26,6 +26,11 @@ const LoginPage = () => {
         handleBaseApiResponse(response, messageApi, () => navigate("/home"));
     };
 
+    const toRegister = (event) => {
+        event.preventDefault();
+        navigate("/register");
+    }
+
     return (
                 <div className="login-container">
                     {contextHolder}
@@ -49,7 +54,7 @@ const LoginPage = () => {
                                 Log in
                             </button>
                             <div>
-                                <a href="http://baidu.com" style={{ float: 'left', fontSize: '18px', fontFamily: 'Arial, sans-serif', marginLeft: '40px', textDecoration: 'none', color: 'rgb(0,0,0)', marginTop: '7px' }}>Or register now!</a>
+                                <a onClick={toRegister} style={{ float: 'left', fontSize: '18px', fontFamily: 'Arial, sans-serif', marginLeft: '40px', textDecoration: 'none', color: 'rgb(0,0,0)', marginTop: '7px' }}>Or register now!</a>
                             </div>
                         </form>
                     </div>
