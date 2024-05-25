@@ -44,7 +44,7 @@ CREATE TABLE `user_info` (
 
 LOCK TABLES `user_info` WRITE;
 /*!40000 ALTER TABLE `user_info` DISABLE KEYS */;
-INSERT INTO `user_info` VALUES ('lin040430','20040430','Lin Chengliang','路人甲','/myImages/headshot.jpg','904573025@qq.com','上海',100,1,'害羞老实人一枚捏',0);
+INSERT INTO `user_info` VALUES ('lin040430','20040430','Lin Chengliang','路人甲','/myImages/headshot.jpg','904573025@qq.com','上海',100,1,'害羞老实人一枚捏',0),('lin0430','Lin040430','','','','','',0,1,'',0);
 /*!40000 ALTER TABLE `user_info` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -57,4 +57,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-05-12 21:31:28
+-- Dump completed on 2024-05-25 18:33:28

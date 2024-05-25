@@ -35,7 +35,7 @@ CREATE TABLE `order_items` (
   KEY `fk_order_idx` (`order_id`),
   CONSTRAINT `fk_book` FOREIGN KEY (`book_id`) REFERENCES `books` (`book_id`) ON DELETE RESTRICT ON UPDATE CASCADE,
   CONSTRAINT `fk_order` FOREIGN KEY (`order_id`) REFERENCES `orders` (`orderid`)
-) ENGINE=InnoDB AUTO_INCREMENT=18 DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB AUTO_INCREMENT=38 DEFAULT CHARSET=utf8mb3;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -44,7 +44,7 @@ CREATE TABLE `order_items` (
 
 LOCK TABLES `order_items` WRITE;
 /*!40000 ALTER TABLE `order_items` DISABLE KEYS */;
-INSERT INTO `order_items` VALUES (7,4,1,1,10,'Book 1','/myImages/book2.jpg'),(8,4,3,1,30,'Book 3','/myImages/book2.jpg'),(9,4,4,3,120,'Book 4','/myImages/book2.jpg'),(10,5,1,1,10,'Book 1','/myImages/book2.jpg'),(11,5,3,1,30,'Book 3','/myImages/book2.jpg'),(12,5,4,3,120,'Book 4','/myImages/book2.jpg'),(13,6,1,3,30,'Book 1','/myImages/book2.jpg'),(14,7,1,1,10,'Book 1','/myImages/book2.jpg'),(15,8,1,3,30,'Book 1','/myImages/book2.jpg'),(16,8,9,1,90,'Book 9','/myImages/book2.jpg'),(17,8,15,1,150,'Book 15','/myImages/book2.jpg');
+INSERT INTO `order_items` VALUES (32,16,1,1,1000,'Book 1','/myImages/book2.jpg'),(33,17,1,1,1000,'Book 1','/myImages/book2.jpg'),(34,17,2,1,2000,'Book 2','/myImages/book2.jpg'),(35,17,3,1,3000,'Book 3','/myImages/book2.jpg'),(36,18,2,3,6000,'Book 2','/myImages/book2.jpg'),(37,18,4,1,4000,'Book 4','/myImages/book2.jpg');
 /*!40000 ALTER TABLE `order_items` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -57,4 +57,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-05-12 21:31:27
+-- Dump completed on 2024-05-25 18:33:29

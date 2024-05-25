@@ -33,7 +33,7 @@ CREATE TABLE `orders` (
   PRIMARY KEY (`orderid`),
   KEY `fk_user_id_idx` (`user_id`),
   CONSTRAINT `fk_user_id` FOREIGN KEY (`user_id`) REFERENCES `user_info` (`user_id`) ON DELETE RESTRICT ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB AUTO_INCREMENT=19 DEFAULT CHARSET=utf8mb3;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -42,7 +42,7 @@ CREATE TABLE `orders` (
 
 LOCK TABLES `orders` WRITE;
 /*!40000 ALTER TABLE `orders` DISABLE KEYS */;
-INSERT INTO `orders` VALUES (4,'sss','ss','17317452617',160,'2024-05-12','lin040430'),(5,'sssss','ss','sssss',160,'2024-05-12','lin040430'),(6,'ss','ss','ssss',30,'2024-05-12','lin040430'),(7,'ssss','ss','sss',10,'2024-05-12','lin040430'),(8,'b站！','丹阳小狗','17317452617',270,'2024-05-12','lin040430');
+INSERT INTO `orders` VALUES (16,'sss','hahah','1928200183',1000,'2024-05-25','lin040430'),(17,'中国','林承亮','17317452617',6000,'2024-05-25','lin040430'),(18,'美国','林承亮','17317452617',10000,'2024-05-25','lin0430');
 /*!40000 ALTER TABLE `orders` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -55,4 +55,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-05-12 21:31:28
+-- Dump completed on 2024-05-25 18:33:28
