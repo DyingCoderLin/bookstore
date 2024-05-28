@@ -1,4 +1,4 @@
-import {getJson, PREFIX} from "./common";
+import {getJson, post, PREFIX} from "./common";
 
 export async function getUser() {
     const url = `${PREFIX}/getUser`;
@@ -13,6 +13,33 @@ export async function getUser() {
     return user;
 }
 
+export async function updateUser(name, nickname, email, defaultAddress, selfIntro) {
+    const url = `${PREFIX}/updateUser`;
+    let result;
+    try {
+        result = await post(url,{ name, nickname, email, defaultAddress, selfIntro});
+        // console.log(result);
+    } catch (e) {
+        console.log(e);
+        result = []
+    }
+    return result;
+}
+
+export async function updateAvatar(base64Image) {
+    const url = `${PREFIX}/updateAvatar`;
+    let result;
+    try {
+        result = await post(url,{base64Image});
+        // console.log(result);
+    } catch (e) {
+        console.log(e);
+        result = []
+    }
+    return result;
+}
+
+//administer
 export async function getAllUsers() {
     const url = `${PREFIX}/getAllUsers`;
     let users;

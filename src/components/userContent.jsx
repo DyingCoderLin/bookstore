@@ -1,76 +1,99 @@
-import React, {useEffect, useState} from "react";
-import { Card, Descriptions, Row, Col, Input, Button } from 'antd';
-// import { userData } from "../App";
-import { getUser } from "../service/user";
+import React, { useEffect, useState} from "react";
+import { Card, Descriptions, Row, Col, Input, Button, Upload, message } from 'antd';
+import { getUser,updateAvatar } from "../service/user";
+import useMessage from "antd/es/message/useMessage";
+import { UploadOutlined } from '@ant-design/icons';
+import ModifyUserModel from "./modify_user_model";
+import {handleBaseApiResponse} from "../utils/message";
 
 export default function UserContent() {
-    const [editedUser, setEditedUser] = useState([]); // 使用状态来存储编辑后的用户信息
-
-    // 处理输入框内容变化事件
-    const handleInputChange = (key, value) => {
-        setEditedUser(prevUser => ({
-            ...prevUser,
-            [key]: value
-        }));
-    };
+    const [messageApi, contextHolder] = useMessage();
+    const [user, setUser] = useState({});
+    const [showModal, setShowModal] = useState(false);
 
     const initialUser = async () => {
         let user = await getUser();
-        setEditedUser(user);
+        setUser(user);
     }
 
     useEffect(() => {
         initialUser();
     }, []);
 
-    // 处理保存按钮点击事件
     const handleSave = () => {
-        // 这里可以编写保存用户信息的逻辑，例如发送请求到后端保存用户信息等
-        console.log("保存的用户信息:", editedUser);
-        // 这里仅演示，在实际应用中需要根据具体情况进行处理
-        alert("用户信息已保存");
+        setShowModal(true);
     };
 
-    const handleCancel = () => {
-        alert("取消编辑");
+    const handleClose = () => {
+        console.log('close');
+        setShowModal(false);
+    };
+
+    const handleSubmit = () => {
+        console.log('submit');
+        setShowModal(false);
+        initialUser();
+    }
+
+    const handleUpload = async (file) => {
+        const reader = new FileReader();
+        reader.onload = async (e) => {
+            const base64Image = e.target.result;
+            // 将base64Image传给后端
+            console.log(base64Image);
+            let res = await updateAvatar(base64Image);
+            handleBaseApiResponse(res, messageApi, initialUser);
+        };
+        reader.readAsDataURL(file);
+        // 返回 false 以阻止 Ant Design 的默认上传行为
+        return false;
     };
 
     const items = [
-        { label: '姓名', children: <Input style={{ fontSize: '22px', background: 'transparent' }} value={editedUser.name} onChange={e => handleInputChange('name', e.target.value)} />, span: 2 },
-        { label: '昵称', children: <Input style={{ fontSize: '22px', background: 'transparent' }} value={editedUser.nickname} onChange={e => handleInputChange('nickname', e.target.value)} />, span: 2 },
-        { label: '余额', children: <Input style={{ fontSize: '22px', background: 'transparent' }} value={`￥${editedUser.balance}`} onChange={e => handleInputChange('balance', e.target.value)} />, span: 4 },
-        { label: '用户等级', children: <Input style={{ fontSize: '22px', background: 'transparent' }} value={editedUser.userLevel} onChange={e => handleInputChange('userLevel', e.target.value)} />, span: 2 },
-        { label: '联系方式', children: <Input style={{ fontSize: '22px', background: 'transparent' }} value={editedUser.email} onChange={e => handleInputChange('email', e.target.value)} />, span: { xl: 4, xxl: 4 } },
-        { label: '头像', span: 2, children: (
-                <div style={{display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
-                    <img src={editedUser.avatar} style={{width: '100px', height: '100px'}}/>
-                    <Button style={{marginTop: '10px', width: '100px'}} type="primary">上传头像</Button>
+        { label: '姓名', children: <span>{user.name}</span>, span: 2 },
+        { label: '昵称', children: <span>{user.nickname}</span>, span: 2 },
+        { label: '余额', children: <span>￥{user.balance}</span>, span: 4 },
+        { label: '用户等级', children: <span>{user.userLevel}</span>, span: 2 },
+        { label: '邮箱', children: <span>{user.email}</span>, span: { xl: 4, xxl: 4 } },
+        {
+            label: '头像', span: 2, children: (
+                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                    <img src={user.avatar} style={{ width: '100px', height: '100px' }} />
+                    <Upload
+                        beforeUpload={handleUpload}
+                        showUploadList={false}
+                    >
+                        <Button icon={<UploadOutlined />} style={{ marginTop: '10px', width: '100px' }}>上传头像</Button>
+                    </Upload>
                 </div>
             )
         },
-        { label: '个性化自述', children: <Input.TextArea style={{ fontSize: '22px', background: 'transparent' }} value={editedUser.selfIntro} onChange={e => handleInputChange('selfIntro', e.target.value)} />, span: {xl: 2, xxl: 2} },
+        { label: '个性化自述', children: <span>{user.selfIntro}</span>, span: { xl: 2, xxl: 2 } },
     ];
 
     return (
-        <Card id="myCard" className="card-container"
-              style={{margin: "auto", marginTop: "20px",marginBottom:"20px", backgroundColor: 'rgba(255,255,255,0.8)', width: '90%'}}>
-            <Descriptions
-                title={<span style={{fontSize: '40px', color: '#000000'}}>个人信息</span>}
-                bordered
-                layout={"vertical"}
-                style={{padding: '1q0px'}}
-                column={{xs: 2, sm: 2, md: 3, lg: 3, xl: 4, xxl: 4}}
-                contentStyle={{fontSize: '22px'}}
-                labelStyle={{color: '#000000', fontSize: '24px'}}
-                items={items}
-            />
-            <div style={{textAlign: 'center', marginTop: '10px'}}>
-                <Button type="primary" size="large" style={{marginRight: '100px'}} onClick={handleSave}>保存</Button>
-                <Button size="large" onClick={handleCancel}>取消</Button>
-            </div>
-        </Card>
+        <>
+            {contextHolder}
+            {showModal && <ModifyUserModel user={user} onOK={handleSubmit} onCancel={handleClose} />}
+            <Card
+                id="myCard"
+                className="card-container"
+                style={{ margin: "auto", marginTop: "20px", marginBottom: "20px", backgroundColor: 'rgba(255,255,255,0.8)', width: '90%' }}
+            >
+                <Descriptions
+                    title={<span style={{ fontSize: '40px', color: '#000000' }}>个人信息</span>}
+                    bordered
+                    layout={"vertical"}
+                    style={{ padding: '10px' }}
+                    column={{ xs: 2, sm: 2, md: 3, lg: 3, xl: 4, xxl: 4 }}
+                    contentStyle={{ fontSize: '22px' }}
+                    labelStyle={{ color: '#000000', fontSize: '24px' }}
+                    items={items}
+                />
+                <div style={{ textAlign: 'center', marginTop: '10px' }}>
+                    <Button type="primary" size="large" style={{ marginRight: '100px' }} onClick={handleSave}>编辑</Button>
+                </div>
+            </Card>
+        </>
     );
 }
-
-
-

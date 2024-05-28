@@ -27,12 +27,27 @@ export async function getAllBooks() {
     return books;
 }
 
+export async function getBooksByPageandTitle(page, size,search) {
+    const url = `${PREFIX}/getBooksByPageandTitle`;
+    let books;
+    try {
+        books = await post(url, {page, size,search});
+        console.log(books);
+    } catch (e) {
+        console.log(e);
+        books = {
+            items: []
+        }
+    }
+    return books;
+}
+
 //for administartor
-export async function updateBook(bookID,title,author,isbn,price,inventory) {
+export async function updateBook(bookID,title,author,isbn,price,inventory,img) {
     const url = `${PREFIX}/updateBook`;
     let result;
     try {
-        result = await post(url, {bookID,title,author,isbn,price,inventory});
+        result = await post(url, {bookID,title,author,isbn,price,inventory,img});
     } catch (e) {
         console.log(e);
         result = null;
@@ -40,11 +55,11 @@ export async function updateBook(bookID,title,author,isbn,price,inventory) {
     return result;
 }
 
-export async function addBook(title,author,isbn,price,inventory) {
+export async function addBook(title,author,isbn,price,inventory,img) {
     const url = `${PREFIX}/addBook`;
     let result;
     try {
-        result = await post(url, {title,author,isbn,price,inventory});
+        result = await post(url, {title,author,isbn,price,inventory,img});
     } catch (e) {
         console.log(e);
         result = null;

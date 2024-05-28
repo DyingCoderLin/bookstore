@@ -1,21 +1,33 @@
-import React from 'react';
-import { Button, Form, Input, Modal,Space } from 'antd';
-import useMessage from "antd/es/message/useMessage";
+import React, { useState, useEffect } from 'react';
+import { Button, Form, Input, Modal, Space, Upload } from 'antd';
+import useMessage from 'antd/es/message/useMessage';
+import { UploadOutlined } from '@ant-design/icons';
 import { updateBook } from '../service/book';
-import {handleBaseApiResponse} from "../utils/message";
-import {useEffect} from "react";
+import { handleBaseApiResponse } from '../utils/message';
 
 const ModifyBookModal = ({ book, onOk, onCancel }) => {
     const [messageApi, contextHolder] = useMessage();
     const [form] = Form.useForm();
+    const [bookImage, setBookImage] = useState(book.image || null);
+
+    const handleUpload = async (file) => {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            const base64Image = e.target.result;
+            setBookImage(base64Image);
+        };
+        reader.readAsDataURL(file);
+        return false; // 阻止默认的上传行为
+    };
 
     const handleSubmit = async (values) => {
         const { title, author, isbn, price, inventory } = values;
-        console.log("id",book.bookID);
-        console.log(title,author,isbn,price,inventory);
-        let res = await updateBook(book.bookID, title,author,isbn,price,inventory);
+        // console.log("id", book.bookID);
+        console.log(bookImage);
+        console.log(title, author, isbn, price, inventory);
+        let res = await updateBook(book.bookID, title, author, isbn, price, inventory, bookImage);
         handleBaseApiResponse(res, messageApi, onOk);
-    }
+    };
 
     useEffect(() => {
         form.setFieldsValue({
@@ -25,85 +37,89 @@ const ModifyBookModal = ({ book, onOk, onCancel }) => {
             price: book.price,
             inventory: book.inventory,
         });
-    }, [book, form]); // 当 book 或 form 变化时，设置表单项的默认值
+        setBookImage(book.img);
+    }, [book, form]);
 
     return (
         <Modal
-            title= {"修改书籍信息"}
+            title="修改书籍信息"
             open
             onOk={onOk}
             onCancel={onCancel}
             footer={null}
             width={800}
-            style={{textAlign: 'center'}}
+            style={{ textAlign: 'center' }}
         >
             {contextHolder}
             <Form
                 form={form}
-                layout={'vertical'}
-                // initialValues={{ remember: true }}
+                layout="vertical"
                 onFinish={handleSubmit}
             >
+                <Form.Item>
+                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' ,marginTop:"10px"}}>
+                        {bookImage && <img src={bookImage} alt="书籍图片" style={{ width: '100px', height: '100px', marginRight: '20px' }} />}
+                        <Upload
+                            beforeUpload={handleUpload}
+                            showUploadList={false}
+                            accept=".jpg,.png"
+                        >
+                            <Button icon={<UploadOutlined />} style={{ marginLeft: '20px' }}>上传图片</Button>
+                        </Upload>
+                    </div>
+                </Form.Item>
+
                 <Form.Item
                     label="书名"
                     name="title"
-                    rules={[{ required:false, message: '请输入书籍名称!' }]}
+                    rules={[{ required: true, message: '请输入书籍名称!' }]}
                 >
-                    <Input
-                        defaultValue={book.title}
-                    />
+                    <Input />
                 </Form.Item>
 
                 <Form.Item
                     label="作者"
                     name="author"
-                    rules={[{ required: false, message: '请输入作者!' }]}
+                    rules={[{ required: true, message: '请输入作者!' }]}
                 >
-                    <Input
-                        defaultValue={book.author}
-                    />
+                    <Input />
                 </Form.Item>
 
                 <Form.Item
                     label="ISBN"
                     name="isbn"
-                    rules={[{ required: false, message: '请输入ISBN编号!' }]}
+                    rules={[{ required: true, message: '请输入ISBN编号!' }]}
                 >
-                    <Input
-                        defaultValue={book.isbn}
-                    />
+                    <Input />
                 </Form.Item>
 
                 <Form.Item
                     label="价格"
                     name="price"
-                    rules={[{ required: false, message: '请输入价格!' }]}
+                    rules={[{ required: true, message: '请输入价格!' }]}
                 >
-                    <Input
-                        defaultValue={book.price}
-                    />
+                    <Input />
                 </Form.Item>
 
                 <Form.Item
                     label="库存"
                     name="inventory"
-                    rules={[{ required: false, message: '请输入库存!' }]}
+                    rules={[{ required: true, message: '请输入库存!' }]}
                 >
-                    <Input
-                        defaultValue={book.inventory}
-                    />
+                    <Input />
                 </Form.Item>
+
                 <Space>
                     <Button type="primary" htmlType="submit" style={{ marginTop: 10 }}>
                         提交
                     </Button>
-                    <Button type="primary" danger htmlType="reset" style={{ marginTop: 10 }} onClick={onCancel}>
+                    <Button type="primary" danger style={{ marginTop: 10 }} onClick={onCancel}>
                         取消
                     </Button>
                 </Space>
             </Form>
         </Modal>
     );
-}
+};
 
 export default ModifyBookModal;

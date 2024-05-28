@@ -1,45 +1,77 @@
-import React from 'react';
-import { Button, Form, Input, Modal,Space } from 'antd';
-import useMessage from "antd/es/message/useMessage";
-import { updateBook } from '../service/book';
-import {handleBaseApiResponse} from "../utils/message";
-import {useEffect} from "react";
-import {addBook} from "../service/book";
+import React, { useState, useEffect } from 'react';
+import { Button, Form, Input, Modal, Space, Upload } from 'antd';
+import useMessage from 'antd/es/message/useMessage';
+import { UploadOutlined } from '@ant-design/icons';
+import { addBook } from '../service/book';
+import { handleBaseApiResponse } from '../utils/message';
 
-const AddBookModel = ({ onOk, onCancel}) => {
+const AddBookModel = ({ book, onOk, onCancel }) => {
     const [messageApi, contextHolder] = useMessage();
     const [form] = Form.useForm();
+    // const [bookImage, setBookImage] = useState(isNew ? null : book?.image || null);
+    const [bookImage, setBookImage] = useState({});
+
+    const handleUpload = async (file) => {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            const base64Image = e.target.result;
+            setBookImage(base64Image);
+        };
+        reader.readAsDataURL(file);
+        // 返回 false 以阻止 Ant Design 的默认上传行为
+        return false;
+    };
 
     const handleSubmit = async (values) => {
         const { title, author, isbn, price, inventory } = values;
-        console.log(title,author,isbn,price,inventory);
-        let res = await addBook(title,author,isbn,price,inventory);
+        console.log(bookImage);
+        console.log(title, author, isbn, price, inventory, bookImage);
+        let res = await addBook({ title, author, isbn, price, inventory, bookImage });
         handleBaseApiResponse(res, messageApi, onOk);
-    }
+    };
+
+    // useEffect(() => {
+    //     if (!isNew && book) {
+    //         form.setFieldsValue(book);
+    //         setBookImage(book.img);
+    //     }
+    // }, [isNew, book, form]);
 
     return (
         <Modal
-            title= {"修改书籍信息"}
+            title={"添加书籍信息"}
             open
             onOk={onOk}
             onCancel={onCancel}
             footer={null}
             width={800}
-            style={{textAlign: 'center'}}
+            style={{ textAlign: 'center' }}
         >
             {contextHolder}
             <Form
                 form={form}
                 layout={'vertical'}
-                // initialValues={{ remember: true }}
                 onFinish={handleSubmit}
             >
+                <Form.Item>
+                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' ,marginTop:"10px"}}>
+                        {bookImage && <img src={bookImage} alt="书籍图片" style={{ width: '100px', height: '100px', marginRight: '20px' }} />}
+                        <Upload
+                            beforeUpload={handleUpload}
+                            showUploadList={false}
+                            accept=".jpg,.png"
+                        >
+                            <Button icon={<UploadOutlined />} style={{ marginLeft: '20px' }}>上传图片</Button>
+                        </Upload>
+                    </div>
+                </Form.Item>
+
                 <Form.Item
                     label="书名"
                     name="title"
                     rules={[{ required: true, message: '请输入书籍名称!' }]}
                 >
-                    <Input/>
+                    <Input />
                 </Form.Item>
 
                 <Form.Item
@@ -47,7 +79,7 @@ const AddBookModel = ({ onOk, onCancel}) => {
                     name="author"
                     rules={[{ required: true, message: '请输入作者!' }]}
                 >
-                    <Input/>
+                    <Input />
                 </Form.Item>
 
                 <Form.Item
@@ -55,7 +87,7 @@ const AddBookModel = ({ onOk, onCancel}) => {
                     name="isbn"
                     rules={[{ required: true, message: '请输入ISBN编号!' }]}
                 >
-                    <Input/>
+                    <Input />
                 </Form.Item>
 
                 <Form.Item
@@ -63,7 +95,7 @@ const AddBookModel = ({ onOk, onCancel}) => {
                     name="price"
                     rules={[{ required: true, message: '请输入价格!' }]}
                 >
-                    <Input/>
+                    <Input />
                 </Form.Item>
 
                 <Form.Item
@@ -71,19 +103,20 @@ const AddBookModel = ({ onOk, onCancel}) => {
                     name="inventory"
                     rules={[{ required: true, message: '请输入库存!' }]}
                 >
-                    <Input/>
+                    <Input />
                 </Form.Item>
+
                 <Space>
                     <Button type="primary" htmlType="submit" style={{ marginTop: 10 }}>
                         提交
                     </Button>
-                    <Button type="primary" danger htmlType="reset" style={{ marginTop: 10 }} onClick={onCancel}>
+                    <Button type="primary" danger style={{ marginTop: 10 }} onClick={onCancel}>
                         取消
                     </Button>
                 </Space>
             </Form>
         </Modal>
     );
-}
+};
 
 export default AddBookModel;
