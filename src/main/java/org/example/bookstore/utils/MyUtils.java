@@ -31,4 +31,13 @@ public class MyUtils {
         return price / 100.0;
     }
 
+    public static Integer toCent(String price) {
+        return (int) (Double.parseDouble(price) * 100);
+    }
+
+    public static Integer toCent(Double price) {
+        price = price * 100;
+        return price.intValue();
+    }
+
 }

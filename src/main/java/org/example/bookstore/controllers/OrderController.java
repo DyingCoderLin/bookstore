@@ -31,6 +31,9 @@ public class OrderController {
     @Autowired
     private CartItemService cartItemService;
 
+    @Autowired
+    private BookService bookService;
+
     @PostMapping("/placeOrder")
     public Response placeOrder(@RequestBody Map<String, Object> orderInfo){
         final Logger log = LoggerFactory.getLogger(OrderController.class);
@@ -48,9 +51,14 @@ public class OrderController {
         log.info("to here1");
         int totalPrice = 0;
         CartItem cartItem = null;
-        //对应id找到相应的cartItem并放入orderItem中，放入对应的cartItem之后也要将这些cartItem都删除掉
+        //对应id找到相应的cartItem并放入orderItem中，放入对应的cartItem之后也要将这些cartItem都删除掉，并且对于库存和销量做相应操作
         for(Integer cartItemId : cartItemIds){
             cartItem = cartItemService.findByCartItemId(cartItemId);
+            Book book = cartItem.getBook();
+            book.setSales(book.getSales() + cartItem.getQuantity());
+//            Integer leftQuantity = book.getInventory() - cartItem.getQuantity();
+            book.setInventory(book.getInventory() - cartItem.getQuantity());
+            bookService.save(book);
             totalPrice += cartItem.getPrice();
             OrderItem orderItem = new OrderItem(cartItem.getQuantity(),cartItem.getPrice(),cartItem.getTitle(),cartItem.getImg(),cartItem.getBook(),order);
             cartItemService.delete(cartItem);
@@ -58,6 +66,8 @@ public class OrderController {
         }
         order.setTotalPrice(totalPrice);
         orderService.save(order);
+        user.setBalance(user.getBalance() - totalPrice);
+        userService.save(user);
         return new Response(200, "下单成功");
     }
 
@@ -74,6 +84,26 @@ public class OrderController {
             log.info("orderID: " + order.getOrderID());
             OrderDTO orderDTO = new OrderDTO(order);
             orders.add(orderDTO);
+        }
+        if(orders.size() > 1) {
+            Collections.reverse(orders);
+        }
+        return orders;
+    }
+
+    @GetMapping("/adminGetAllOrders")
+    public List<OrderDTO> adminGetAllOrders(){
+        final Logger log = LoggerFactory.getLogger(OrderController.class);
+        log.info("Admin is querying Orders");
+        //遍历所有user的order
+        List<OrderDTO> orders = new ArrayList<>();
+        for(User user : userService.findAll()){
+            String userID = user.getUserID();
+            for(Order order : user.getOrders()){
+                OrderDTO orderDTO = new OrderDTO(order);
+                orderDTO.setUserID(userID);
+                orders.add(orderDTO);
+            }
         }
         if(orders.size() > 1) {
             Collections.reverse(orders);

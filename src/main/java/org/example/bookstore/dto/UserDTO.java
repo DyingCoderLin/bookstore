@@ -16,6 +16,7 @@ public class UserDTO {
     private Integer userLevel;
     private String selfIntro;
     private Integer progress;
+    private Boolean isBanned;
 
     public UserDTO() {
     }
@@ -30,5 +31,6 @@ public class UserDTO {
         this.userLevel = user.getUserLevel();
         this.selfIntro = user.getSelfIntro();
         this.progress = user.getProgress();
+        this.isBanned = user.getIsBanned();
     }
 }

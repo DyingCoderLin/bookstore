@@ -2,6 +2,7 @@ package org.example.bookstore.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import org.springframework.data.relational.core.sql.In;
 
 import java.util.List;
 
@@ -13,6 +14,15 @@ public class Book {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "book_id")
     private Integer bookID;
+
+    @Column(name = "inventory")
+    private Integer inventory;
+
+    @Column(name = "status")
+    private Boolean status;
+
+    @Column(name = "sales")
+    private Integer sales;
 
     @Column(name = "img")
     private String img;
@@ -32,19 +42,22 @@ public class Book {
     @Column(name = "detail")
     private String detail;
 
-    @Column(name = "sales")
-    private String sales;
+    @Column(name = "isbn")
+    private String isbn;
 
-    @Column(name = "status")
-    private String status;
+    @Column(name = "is_available")
+    private Boolean isAvailable;
 
     //同一本书会出现在不同订单里，但是这个会很少用到
     @JsonIgnore
     @OneToMany(mappedBy = "cart_book", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<CartItem> cartItems;
 
-    public Book(Integer bookID, String img, String title, String author, Integer price, String description, String detail, String sales, String status) {
+    public Book(Integer bookID, Integer inventory, Integer sales,String img, String title, String author, Integer price, String description, String detail,String isbn) {
         this.bookID = bookID;
+        this.inventory = inventory;
+        if(inventory == 0)
+            this.status = false;
         this.img = img;
         this.title = title;
         this.author = author;
@@ -52,10 +65,21 @@ public class Book {
         this.description = description;
         this.detail = detail;
         this.sales = sales;
-        this.status = status;
+        this.isbn = isbn;
+        this.isAvailable = true;
     }
 
     public Book() {
+        img = "/myImages/book2.jpg";
+        this.isAvailable = true;
+        this.title = "Title";
+        this.author = "Author";
+        this.price = 0;
+        this.description = "Description";
+        this.detail = "Detail";
+        this.isbn = "ISBN";
+        this.inventory = 0;
+        this.sales = 0;
     }
 
     // 添加 getters 和 setters
@@ -65,6 +89,34 @@ public class Book {
 
     public void setBookID(Integer id) {
         this.bookID = id;
+    }
+
+    public Integer getInventory() {
+        return inventory;
+    }
+
+    public void setInventory(Integer inventory) {
+        this.inventory = inventory;
+        if(inventory == 0)
+            this.status = false;
+        else
+            this.status = true;
+    }
+
+    public Boolean getStatus() {
+        return status;
+    }
+
+    public void setStatus(Boolean status) {
+        this.status = status;
+    }
+
+    public Integer getSales() {
+        return sales;
+    }
+
+    public void setSales(Integer sales) {
+        this.sales = sales;
     }
 
     public String getImg() {
@@ -119,19 +171,19 @@ public class Book {
         this.detail = detail;
     }
 
-    public String getSales() {
-        return sales;
+    public String getIsbn() {
+        return isbn;
     }
 
-    public void setSales(String sales) {
-        this.sales = sales;
+    public void setIsbn(String isbn) {
+        this.isbn = isbn;
     }
 
-    public String getStatus() {
-        return status;
+    public Boolean getIsAvailable() {
+        return isAvailable;
     }
 
-    public void setStatus(String status) {
-        this.status = status;
+    public void setIsAvailable(Boolean isAvailable) {
+        this.isAvailable = isAvailable;
     }
 }

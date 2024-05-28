@@ -25,4 +25,8 @@ public class BookDaoImpl implements BookDao{
     public Book save(Book book) {
         return bookRepository.save(book);
     }
+
+    public void delete(Book book) {
+        bookRepository.delete(book);
+    }
 }

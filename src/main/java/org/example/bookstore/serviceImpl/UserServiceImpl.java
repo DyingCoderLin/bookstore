@@ -10,6 +10,8 @@ import org.springframework.stereotype.Service;
 import org.example.bookstore.service.UserService;
 import org.example.bookstore.dto.Response;
 
+import java.util.List;
+
 @Service
 public class UserServiceImpl implements UserService{
     @Autowired
@@ -24,22 +26,43 @@ public class UserServiceImpl implements UserService{
         final Logger log = org.slf4j.LoggerFactory.getLogger(UserController.class);
         log.info(userID + " is trying to login" + " with password " + password);
         MyUtils.setSession(userID);
-        if(userDao.findByUserID(userID).getPassword().equals(password)) {
-            return new Response(200, "登陆成功");
+        class ForLogin{
+            public boolean isAdmin;
+            ForLogin(){
+                isAdmin = false;
+            }
+        }
+        User user = userDao.findByUserID(userID);
+        if(user.getIsBanned()){
+            return new Response(400, "您的账户已被封禁");
+        }
+        if(user!=null && user.getPassword().equals(password)) {
+            //要将是否为管理员加入Response的data部分再返回
+            ForLogin fl = new ForLogin();
+            fl.isAdmin = user.getIsAdmin();
+            return new Response<ForLogin>(200, "登陆成功", fl);
         }
         else{
             return new Response(400, "用户名或密码错误");
         }
     }
 
-    public Response register(String userID, String password) {
+    public Response register(String userID, String password ,String email) {
         final Logger log = org.slf4j.LoggerFactory.getLogger(UserController.class);
         log.info(userID + " is trying to register" + " with password " + password);
         if (userDao.findByUserID(userID) != null) {
             return new Response(400, "用户名已存在");
         }
-        User user = new User(userID, password, "", "", "", "", "", 0, 1, "", 0);
+        User user = new User(userID, password,false,false, "", "", "", email, "", 0, 1, "", 0);
         userDao.save(user);
         return new Response(200, "注册成功");
+    }
+
+    public void save(User user) {
+        userDao.save(user);
+    }
+
+    public List<User> findAll() {
+        return userDao.findAll();
     }
 }

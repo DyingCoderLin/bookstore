@@ -1,7 +1,10 @@
 package org.example.bookstore.serviceImpl;
 
 import org.example.bookstore.dao.BookDao;
+import org.example.bookstore.dao.CartItemDao;
 import org.example.bookstore.entity.Book;
+import org.example.bookstore.entity.CartItem;
+import org.example.bookstore.service.CartItemService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.example.bookstore.service.BookService;
@@ -16,12 +19,18 @@ public class BookServiceImpl implements BookService{
     @Autowired
     private BookDao bookDao;
 
+    @Autowired
+    private CartItemService cartItemService;
+
     @Override
     public List<BookDTO> findAll() {
         // 将所有book都转成bookdto并传回
         List<Book> books = bookDao.findAll();
         List<BookDTO> bookDTOs = new ArrayList<>();
         for(Book book : books){
+            if(!book.getIsAvailable()){
+                continue;
+            }
             BookDTO bookDTO = new BookDTO(book);
             bookDTOs.add(bookDTO);
         }
@@ -29,12 +38,34 @@ public class BookServiceImpl implements BookService{
     }
 
     public Book findByBookId(Integer bookID) {
-        return bookDao.findByBookID(bookID);
+        Book book = bookDao.findByBookID(bookID);
+        if(book == null || !book.getIsAvailable()){
+            return null;
+        }
+        return book;
     }
 
     public Book save(Book book) {
         return bookDao.save(book);
     }
 
+    public Response deleteByBookID(Integer bookID) {
+        Book book = bookDao.findByBookID(bookID);
+        if(book == null){
+            return new Response(400, "未找到要被删除书籍");
+        }
+        //遍历book的cartitems,将它们删除
+        List<CartItem> cartItemsToDelete = new ArrayList<>();
+        for(CartItem cartItem : book.getCartItems()){
+            cartItemsToDelete.add(cartItem);
+        }
+        for(CartItem cartItem : cartItemsToDelete){
+            book.getCartItems().remove(cartItem);
+            cartItemService.delete(cartItem);
+        }
+        book.setIsAvailable(false);
+        bookDao.save(book);
+        return new Response(200, "删除成功");
+    }
 }
 

@@ -16,6 +16,8 @@ public class CartItemDTO {
 
     private String title;
 
+    private BookDTO book;
+
     public CartItemDTO() {
     }
 
@@ -25,5 +27,6 @@ public class CartItemDTO {
         this.quantity = cartItem.getQuantity();
         this.img = cartItem.getImg();
         this.title = cartItem.getTitle();
+        this.book = new BookDTO(cartItem.getBook());
     }
 }
