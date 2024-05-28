@@ -47,6 +47,41 @@ public class UserController {
         return userService.register(userID, password,email);
     }
 
+    @PostMapping("updateUser")
+    public Response updateUser(@RequestBody Map<String,Object> requestBody) {
+        final Logger log = org.slf4j.LoggerFactory.getLogger(UserController.class);
+        log.info("Update User Request");
+        HttpSession session = MyUtils.getSession();
+        String userID = (String) session.getAttribute("userID");
+        User user = userService.findByUserID(userID);
+        String nickname = (String) requestBody.get("nickname");
+        if(nickname != null && !nickname.equals("")) user.setNickname(nickname);
+        String defaultAddress = (String) requestBody.get("defaultAddress");
+        if(defaultAddress != null && !defaultAddress.equals("")) user.setDefaultAddress(defaultAddress);
+        String name = (String) requestBody.get("name");
+        if(name != null && !name.equals("")) user.setName(name);
+        String email = (String) requestBody.get("email");
+        if(email != null && !email.equals("")) user.setEmail(email);
+        String selfIntro = (String) requestBody.get("selfIntro");
+        if(selfIntro != null && !selfIntro.equals("")) user.setSelfIntro(selfIntro);
+        userService.save(user);
+        return new Response(200, "更新成功");
+    }
+
+    @PostMapping("updateAvatar")
+    public Response updateAvatar(@RequestBody Map<String,Object> requestBody) {
+        final Logger log = org.slf4j.LoggerFactory.getLogger(UserController.class);
+        log.info("Update Avatar Request");
+        HttpSession session = MyUtils.getSession();
+        String userID = (String) session.getAttribute("userID");
+        User user = userService.findByUserID(userID);
+        String avatar = (String) requestBody.get("base64Image");
+        if(avatar != null && !avatar.equals("")) user.setAvatar(avatar);
+        userService.save(user);
+        return new Response(200, "更新成功");
+    }
+
+    //for administrator
     @GetMapping("/getAllUsers")
     public List<UserDTO> getAllUsers() {
         final Logger log = org.slf4j.LoggerFactory.getLogger(UserController.class);
@@ -78,4 +113,6 @@ public class UserController {
         userService.save(user);
         return new Response(200, "已解禁用户"+userID+"的账户");
     }
+
+
 }

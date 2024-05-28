@@ -74,6 +74,10 @@ public class BookController {
         log.info("Price: "+book.getPrice());
         book.setAuthor((String) requestBody.get("author"));
         book.setIsbn((String) requestBody.get("isbn"));
+        String img = (String)requestBody.get("img");
+        if(img != null && !img.equals("")) {
+            book.setImg((String) requestBody.get("img"));
+        }
         book.setIsAvailable(true);
         bookService.save(book);
         return new Response(200, "书籍"+title+"添加成功");
@@ -113,6 +117,10 @@ public class BookController {
         log.info("Price: "+book.getPrice());
         book.setAuthor((String) requestBody.get("author"));
         book.setIsbn((String) requestBody.get("isbn"));
+        String img = (String)requestBody.get("img");
+        if(img != null && !img.equals("")) {
+            book.setImg((String) requestBody.get("img"));
+        }
         bookService.save(book);
         return new Response(200, "书籍信息更新成功");
     }
@@ -123,6 +131,28 @@ public class BookController {
         log.info("Deleting Book by ID: " + bookID);
         Response response = bookService.deleteByBookID(bookID);
         return response;
+    }
+
+    class Data {
+        public List<BookDTO> bookDTOSs;
+        public int size;
+        public Data(List<BookDTO> bookDTOSs, int size) {
+            this.bookDTOSs = bookDTOSs;
+            this.size = size;
+        }
+    }
+
+    @PostMapping("/getBooksByPageandTitle")
+    public Response getBooksByPageandTitle(@RequestBody Map<String,Object> requestBody) {
+        final Logger log = LoggerFactory.getLogger(BookController.class);
+        Integer page = (Integer) requestBody.get("page");
+        Integer size = (Integer) requestBody.get("size");
+        String searchTitle = (String) requestBody.get("search");
+        log.info("Querying Books by Page: "+page+" Size: "+size);
+        //读取findAll的前五个并返回
+
+        return bookService.findByPageandTitle(page, size,searchTitle);
+//        return bookService.findByPage(page, size);
     }
 
 }

@@ -16,4 +16,6 @@ public interface BookService {
 
     public Response deleteByBookID(Integer bookID);
 
+    public Response findByPageandTitle(Integer page, Integer size, String SearchTitle);
+
 }
