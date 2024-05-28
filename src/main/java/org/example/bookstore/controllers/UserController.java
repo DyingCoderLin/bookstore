@@ -94,6 +94,16 @@ public class UserController {
         return userDTOs;
     }
 
+    @PostMapping("/getUsersByPageAndUserID")
+    public Response getUserByPageAndUserID(@RequestBody Map<String,Object> requestBody) {
+        final Logger log = org.slf4j.LoggerFactory.getLogger(UserController.class);
+        Integer page = (Integer) requestBody.get("page");
+        Integer size = (Integer) requestBody.get("size");
+        String search = (String) requestBody.get("search");
+        log.info("page: " + page + " size: " + size + " search: " + search);
+        return userService.findByPageandUserID(page, size, search);
+    }
+
     @GetMapping("/banUser/{userID}")
     public Response banUser(@PathVariable String userID) {
         final Logger log = org.slf4j.LoggerFactory.getLogger(UserController.class);

@@ -50,7 +50,7 @@ public class Book {
 
     //同一本书会出现在不同订单里，但是这个会很少用到
     @JsonIgnore
-    @OneToMany(mappedBy = "cart_book", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "cartbook", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<CartItem> cartItems;
 
     public Book(Integer bookID, Integer inventory, Integer sales,String img, String title, String author, Integer price, String description, String detail,String isbn) {

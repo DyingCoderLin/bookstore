@@ -64,6 +64,21 @@ public class CartItemController {
         return new Response(200, "添加成功");
     }
 
+    @PostMapping("/getCartItemsByPageAndTitle")
+    public Response getCartItemsByPageAndTitle(@RequestBody Map<String, Object> requestBody){
+        final Logger log = LoggerFactory.getLogger(CartItemController.class);
+        log.info("Get CartItems By Page And Title Request");
+        HttpSession session = MyUtils.getSession();
+        String userID = (String) session.getAttribute("userID");
+        User user = userService.findByUserID(userID);
+        int page = (int) requestBody.get("page");
+        int size = (int) requestBody.get("size");
+        String title = (String) requestBody.get("search");
+        log.info("page: " + page + " size: " + size + " title: " + title);
+        log.info("size:" + user.getCartItems().size());
+        return cartItemService.findByPageandTitle(page, size, title, user);
+    }
+
     @GetMapping("/deleteCartItem/{cartItemID}")
     public Response deleteCartItem(@PathVariable int cartItemID){
         final Logger log = LoggerFactory.getLogger(CartItemController.class);

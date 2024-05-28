@@ -4,6 +4,8 @@ import org.example.bookstore.dao.UserDao;
 import org.example.bookstore.entity.User;
 import org.example.bookstore.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -23,5 +25,11 @@ public class UserDaoImpl implements UserDao {
     }
     public List<User> findAll() {
         return userRepository.findAll();
+    }
+    public int countNormalUsers(String search) {
+        return (int)userRepository.countByIsAdminFalseAndUserIDContaining(search);
+    }
+    public Page<User> findUsersByPageandUserID(Pageable pageable, String search) {
+        return userRepository.findByIsAdminFalseAndUserIDContaining(pageable, search);
     }
 }

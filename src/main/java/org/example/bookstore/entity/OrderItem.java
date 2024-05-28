@@ -25,7 +25,7 @@ public class OrderItem {
 
     @ManyToOne(fetch = FetchType.LAZY,cascade = CascadeType.DETACH)
     @JoinColumn(name = "book_id")
-    private Book order_book;
+    private Book orderbook;
 
     @ManyToOne(fetch = FetchType.LAZY,cascade = CascadeType.DETACH)
     @JoinColumn(name = "order_id")
@@ -39,7 +39,7 @@ public class OrderItem {
         this.price = price;
         this.title = title;
         this.img = img;
-        this.order_book = order_book;
+        this.orderbook = order_book;
         this.order = order;
     }
 
@@ -47,7 +47,7 @@ public class OrderItem {
     public Integer getOrderItemID() { return OrderItemID; }
     public Integer getQuantity() { return quantity; }
     public Integer getPrice() { return price; }
-    public Book getBook() { return order_book; }
+    public Book getBook() { return orderbook; }
     public Order getOrder() { return order; }
     public String getTitle() { return title; }
     public String getImg() { return img; }
@@ -56,7 +56,7 @@ public class OrderItem {
     public void setOrderItemID(Integer OrderItemID) { this.OrderItemID = OrderItemID; }
     public void setQuantity(Integer quantity) { this.quantity = quantity; }
     public void setPrice(Integer price) { this.price = price; }
-    public void setBook(Book book) { this.order_book = book; }
+    public void setBook(Book book) { this.orderbook = book; }
     public void setOrder(Order order) { this.order = order; }
     public void setTitle(String title) { this.title = title; }
     public void setImg(String img) { this.img = img; }

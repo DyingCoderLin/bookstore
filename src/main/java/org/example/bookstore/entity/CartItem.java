@@ -25,11 +25,11 @@ public class CartItem {
 
     @ManyToOne(fetch = FetchType.LAZY,cascade = CascadeType.DETACH)
     @JoinColumn(name = "book_id")
-    private Book cart_book;
+    private Book cartbook;
 
     @ManyToOne(fetch = FetchType.LAZY,cascade = CascadeType.DETACH)
     @JoinColumn(name = "user_id")
-    private User cart_user;
+    private User cartuser;
 
     public CartItem() {
         this.quantity = 1;
@@ -38,16 +38,16 @@ public class CartItem {
     public CartItem(Integer price, Integer quantity, Book book, User cart_user) {
         this.price = price;
         this.quantity = quantity;
-        this.cart_book = book;
-        this.cart_user = cart_user;
+        this.cartbook = book;
+        this.cartuser = cart_user;
     }
 
     // getters
     public Integer getCartItemID() { return cartItemID; }
     public Integer getPrice() { return price; }
     public Integer getQuantity() { return quantity; }
-    public Book getBook() { return cart_book; }
-    public User getCart_user() { return cart_user; }
+    public Book getBook() { return cartbook; }
+    public User getCart_user() { return cartuser; }
     public String getImg() { return img; }
     public String getTitle() { return title; }
 
@@ -56,14 +56,14 @@ public class CartItem {
     public void setPrice(Integer price) { this.price = price; }
     public void setQuantity(Integer quantity) { this.quantity = quantity; }
     public void setBook(Book book) {
-        this.cart_book = book;
+        this.cartbook = book;
         this.img = book.getImg();
         this.title = book.getTitle();
     }
-    public void setCart_user(User cart_user) { this.cart_user = cart_user; }
+    public void setCart_user(User cart_user) { this.cartuser = cart_user; }
     public void detach(){
-        this.cart_book.getCartItems().remove(this);
-        this.cart_user.getCartItems().remove(this);
+        this.cartbook.getCartItems().remove(this);
+        this.cartuser.getCartItems().remove(this);
     }
 
 }

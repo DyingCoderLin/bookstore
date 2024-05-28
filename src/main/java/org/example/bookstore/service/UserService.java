@@ -16,4 +16,6 @@ public interface UserService {
     public void save(User user);
 
     public List<User> findAll();
+
+    public Response findByPageandUserID(Integer page, Integer size, String search);
 }

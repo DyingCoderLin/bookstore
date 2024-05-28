@@ -50,11 +50,11 @@ public class User {
     private Boolean isAdmin;
 
     @JsonIgnore
-    @OneToMany(mappedBy = "cart_user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "cartuser", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<CartItem> cartItems;
 
     @JsonIgnore
-    @OneToMany(mappedBy = "order_user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "orderuser", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Order> orders;
 
     public User() {

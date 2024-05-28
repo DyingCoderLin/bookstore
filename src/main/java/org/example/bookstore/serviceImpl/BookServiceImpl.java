@@ -9,6 +9,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.example.bookstore.service.BookService;
 
@@ -43,7 +44,8 @@ public class BookServiceImpl implements BookService{
     }
 
     public Response findByPageandTitle(Integer page, Integer size,String SearchTitle) {
-        PageRequest pageRequest = PageRequest.of(page - 1, size);
+//        PageRequest pageRequest = PageRequest.of(page - 1, size);
+        Pageable pageRequest = PageRequest.of(page - 1, size);
         Page<Book> bookPage = bookDao.findBooksByPageandTitle(pageRequest, SearchTitle);
 
         List<BookDTO> bookDTOs = bookPage.getContent().stream()

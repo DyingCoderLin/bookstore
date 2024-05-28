@@ -2,15 +2,22 @@ package org.example.bookstore.serviceImpl;
 
 import org.example.bookstore.controllers.UserController;
 import org.example.bookstore.dao.UserDao;
+import org.example.bookstore.dto.BookDTO;
+import org.example.bookstore.dto.UserDTO;
+import org.example.bookstore.entity.Book;
 import org.example.bookstore.entity.User;
 import org.example.bookstore.utils.MyUtils;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.example.bookstore.service.UserService;
 import org.example.bookstore.dto.Response;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class UserServiceImpl implements UserService{
@@ -64,5 +71,29 @@ public class UserServiceImpl implements UserService{
 
     public List<User> findAll() {
         return userDao.findAll();
+    }
+
+    public Response findByPageandUserID(Integer page, Integer size, String search) {
+//        PageRequest pageRequest = PageRequest.of(page - 1, size);
+        Pageable pageRequest = PageRequest.of(page - 1, size);
+        Page<User> userPage = userDao.findUsersByPageandUserID(pageRequest, search);
+
+
+        List<UserDTO> userDTOs = userPage.getContent().stream()
+                .map(UserDTO::new)
+                .collect(Collectors.toList());
+
+        class Data {
+            public List<UserDTO> userDTOs;
+            public int size;
+
+            public Data(List<UserDTO> userDTOs, int size) {
+                this.userDTOs = userDTOs;
+                this.size = size;
+            }
+        }
+
+        Data data = new Data(userDTOs, userDao.countNormalUsers(search));
+        return new Response<Data>(200, "查询成功", data);
     }
 }

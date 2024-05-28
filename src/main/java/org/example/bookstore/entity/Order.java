@@ -32,7 +32,7 @@ public class Order {
 
     @ManyToOne(fetch = FetchType.LAZY,cascade = CascadeType.DETACH)
     @JoinColumn(name = "user_id")
-    private User order_user;
+    private User orderuser;
 
     @JsonIgnore
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
@@ -47,7 +47,7 @@ public class Order {
         this.tel = tel;
         this.totalPrice = totalPrice;
         this.orderDate = orderDate;
-        this.order_user = user;
+        this.orderuser = user;
     }
 
     // getters
@@ -57,7 +57,7 @@ public class Order {
     public String getTel() { return tel; }
     public Integer getTotalPrice() { return totalPrice; }
     public Date getOrderDate() { return orderDate; }
-    public User getUser() { return order_user; }
+    public User getUser() { return orderuser; }
     public List<OrderItem> getOrderItems() { return orderItems; }
 
     // setters
@@ -67,6 +67,6 @@ public class Order {
     public void setTel(String tel) { this.tel = tel; }
     public void setTotalPrice(Integer totalPrice) { this.totalPrice = totalPrice; }
     public void setOrderDate(Date orderDate) { this.orderDate = orderDate; }
-    public void setUser(User user) { this.order_user = user; }
+    public void setUser(User user) { this.orderuser = user; }
 
 }
