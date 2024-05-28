@@ -17,6 +17,19 @@ export async function getAllCartItems() {
     return cartItems;
 }
 
+export async function getCartItemsByPageAndTitle(page, size, search) {
+    const url = `${PREFIX}/getCartItemsByPageAndTitle`;
+    let cartItems;
+    try {
+        cartItems = await post(url,{page,size,search});
+    } catch (e) {
+        console.log(e);
+        cartItems = [];
+    }
+    return cartItems;
+
+}
+
 export async function addCartItem(bookId) {
     const url = `${PREFIX}/addCartItem/${bookId}`;
     console.log(url);

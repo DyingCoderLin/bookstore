@@ -2,7 +2,6 @@ import React, {useState,useEffect} from "react";
 import {Button, Card, Space, Table,Input,Checkbox,message} from "antd";
 // import { BookCartContext } from './bookCartContext';
 import { SearchOutlined, DeleteOutlined, PlusOutlined, MinusOutlined } from '@ant-design/icons';
-// import {cartData} from "../App";
 import PlaceOrderModal from "./place_order_modal";
 import useMessage from "antd/es/message/useMessage";
 import {changeCartItemNumber, deleteCartItem} from "../service/cart";
@@ -12,23 +11,11 @@ import {isOK} from "../utils/myUtils";
 const { Column,ColumnGroup } = Table;
 const { Search } = Input;
 
-export default function Cart_item_table({cartItems,onMutate}) {
+export default function Cart_item_table({cartItems,onMutate,handleSearch,pageIndex,pageSize,total,onPageChange}) {
     const [messageApi,contextHolder] = useMessage();
     const [data, setData] = useState(cartItems);//用于处理要显示哪些信息
     const [selectCartItems,setSelectCartItems] = useState([]);//用于处理哪些书籍被选中
     const [showModal, setShowModal] = useState(false);
-
-    // 用于处理搜索功能，只显示title里有被搜索的部分的书籍
-    const handleSearch = (value) => {
-        // 如果搜索内容为空，则显示所有书籍
-        if (!value.trim()) {
-            setData(cartItems);
-            return;
-        }
-        // 使用 filter 方法筛选标题包含搜索内容的书籍
-        const filteredData = cartItems.filter(item => item.title.includes(value));
-        setData(filteredData);
-    };
 
     const handleDelete = async (itemId) => {
         console.log(itemId);
@@ -120,7 +107,18 @@ export default function Cart_item_table({cartItems,onMutate}) {
                         id="search-input"
                         onSearch={handleSearch}
                     />
-                    <Table dataSource={data} rowKey="id" bordered={true} pagination={{pageSize: 5}}>
+                    <Table
+                        dataSource={data}
+                        rowKey="id"
+                        bordered={true}
+                        pagination={{
+                            current: pageIndex,
+                            pageSize: pageSize,
+                            total: total,
+                            onChange: onPageChange,
+                        }}
+                        locale={{emptyText: <div style={{fontSize: '16px'}}>暂无数据</div>}}
+                    >
                         <ColumnGroup title="书籍">q
                             <Column
                                 title="选择"
@@ -194,13 +192,20 @@ export default function Cart_item_table({cartItems,onMutate}) {
                             )}
                         />
                     </Table>
-                    <h1 style={{color:"black",float:"left",marginTop:"-15px"}}>总价：{computeTotalPrice()}元</h1>
-                    <Button
-                        type="primary"
-                        onClick={handleOpenModal}
-                        size={"large"}
-                        style={{marginLeft: '60px', marginTop: '-100px', marginBottom: '20px'}}
-                    >立刻下单</Button>
+                    <div style={{display: 'flex', alignItems: 'center'}}>
+                        <h1 style={{
+                            color: "black",
+                            marginTop: "10px",
+                            marginRight: "20px",
+                            marginLeft: "auto",
+                        }}>总价：{computeTotalPrice()}元</h1>
+                        <Button
+                            type="primary"
+                            onClick={handleOpenModal}
+                            size={"large"}
+                            style={{marginTop: "-5px"}}
+                        >立刻下单</Button>
+                    </div>
                 </div>
             </Space>
 

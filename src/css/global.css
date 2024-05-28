@@ -79,3 +79,16 @@
     border-color: red;
     background-color: red;
 }
+
+.book-card-description {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    -webkit-line-clamp: 2; /* 指定显示的行数 */
+    line-height: 1.5; /* 设置行高 */
+}
+
+.custom-row {
+    height: 100px; /* 设置每一行的高度为50像素，根据需要进行调整 */
+}
+

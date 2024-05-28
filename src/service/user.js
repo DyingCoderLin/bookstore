@@ -53,6 +53,20 @@ export async function getAllUsers() {
     return users;
 }
 
+export async function getUsersByPageAndUserID(page, size, search) {
+    const url = `${PREFIX}/getUsersByPageAndUserID`;
+    let users;
+    try {
+        users = await post(url, {page, size, search});
+        console.log(users);
+    } catch (e) {
+        console.log(e);
+        users = []
+    }
+    return users;
+
+}
+
 export async function banUser(userID) {
     const url = `${PREFIX}/banUser/${userID}`;
     let result;

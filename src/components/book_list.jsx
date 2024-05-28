@@ -1,29 +1,38 @@
-import { List, Card } from 'antd';
-import BookCard from "./book_card";
+import React, { useState, useEffect } from 'react';
+import { List, Pagination, Card } from 'antd';
+import BookCard from './book_card';
+// import '../css/booklist.css'; // 导入书籍列表样式文件
 
-export default function Booklist({books}) {
+export default function BookList({ books, pageSize, total, pageIndex, onPageChange }) {
+    const [data, setData] = useState(books);
+
+    useEffect(() => {
+        setData(books);
+    }, [books]);
+
     return (
-        <>
-            {books.length === 0 ? (
-                <Card style={{ width: '100%', marginTop: 16,textAlign:"center",backgroundColor:"rgba(255,255,255,0.6)",fontSize:"24px"}} >
-                    没有检索到你要的书籍
-                </Card>
-            ) : (
-                <List
-                    bordered={true}
-                    split={true}
-                    grid={{
-                        gutter: { row: 16, column: 100 },
-                        column: 5
-                    }}
-                    dataSource={books}
-                    renderItem={(book) => (
-                        <List.Item style={{ marginBottom: '40px' }}>
-                            <BookCard book={book} />
-                        </List.Item>
-                    )}
-                />
-            )}
-        </>
+        <div>
+            <List
+                bordered={true}
+                split={true}
+                dataSource={books}
+                grid={{
+                    gutter: { row: 8, column: 8 }, // 调整间距
+                    column: 6
+                }}
+                renderItem={(book) => (
+                    <List.Item style={{ marginBottom: '20px' }}> {/* 调整每个 BookCard 的间距 */}
+                        <BookCard book={book} />
+                    </List.Item>
+                )}
+            />
+            <Pagination
+                current={pageIndex}
+                pageSize={pageSize}
+                total={total}
+                onChange={onPageChange}
+                style={{ marginTop: '20px', textAlign: 'center' }}
+            />
+        </div>
     );
 }

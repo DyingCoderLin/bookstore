@@ -32,6 +32,7 @@ export default function AdminMainContent() {
     const handleSearch = (value) => {
         console.log("search:", value);
         setSearch(value);
+        setPageIndex(1);
     };
 
     return (

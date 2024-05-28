@@ -7,19 +7,9 @@ import {banUser,unBanUser} from "../service/user";
 
 const { Search } = Input;
 
-export default function AdminUserList({ users, onMutate }) {
+export default function AdminUserList({ users, pageIndex, pageSize, total, onPageChange, onMutate, handleSearch }) {
     const [messageApi, contextHolder] = useMessage();
     const [data, setData] = useState(users); // 用于处理要显示哪些信息
-
-    // 用于处理搜索功能，只显示title里有被搜索的部分的书籍
-    const handleSearch = (value) => {
-        if (!value.trim()) {
-            setData(users);
-            return;
-        }
-        const filteredData = users.filter(item => item.userID.includes(value));
-        setData(filteredData);
-    };
 
     useEffect(() => {
         // console.log("change data");
@@ -146,25 +136,34 @@ export default function AdminUserList({ users, onMutate }) {
                 style={{
                     // marginLeft: '200px',
                     backgroundColor: 'rgba(255,255,255,0.4)',
-                    width: 'auto',
+                    width: 'calc(100%)',
+                    height: 'calc(100vh - 100px)',  // 调整高度以适应视口
+                    overflowY: 'auto',  // 如果内容溢出，则确保内容可以滚动
                 }}
             >
                 <Space direction="vertical" size="large" style={{ width: "100%" }}>
-                    <Search
-                        placeholder="搜索用户"
-                        allowClear
-                        enterButton="搜索"
-                        size="large"
-                        onSearch={handleSearch}
-                        // style={{ width: 1500 }}
-                    />
+                    <Space direction="horizontal" size="large" style={{ width: "100%" }}>
+                        <Search
+                            placeholder="搜索用户"
+                            allowClear
+                            enterButton="搜索"
+                            size="large"
+                            onSearch={handleSearch}
+                            style={{ flex: 1, width: "1500px"}}
+                        />
+                    </Space>
                     <Table
                         dataSource={data}
                         rowKey="id"
                         bordered={true}
                         columns={columns}
-                        style={{ marginBottom: '-40px',fontSize:'40px'}}
-                        pagination={{ pageSize: 5 }}
+                        pagination={{
+                            current: pageIndex,
+                            pageSize: pageSize,
+                            total: total,
+                            onChange: onPageChange,
+                        }}
+                        style={{ flex: 1 }}
                     />
                 </Space>
             </Card>

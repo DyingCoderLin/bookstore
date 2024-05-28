@@ -1,40 +1,45 @@
-import { Card, Input, Space } from 'antd';
 import React, { useEffect, useState } from 'react';
+import { Card, Input, Space } from 'antd';
 import '../css/global.css';
 import BookList from "./book_list";
-// import {booksData} from "../App";
-import {getAllBooks} from "../service/book";
+import { getBooksByPageandTitle } from "../service/book";
 
 const { Search } = Input;
 
 export default function MainContent() {
     const [books, setBooks] = useState([]);
-    const [booksData, setBooksData] = useState([]); // 保存所有书籍数据
+    const [search, setSearch] = useState(''); // 保存搜索关键字
+    const [pageIndex, setPageIndex] = useState(1); // 当前页码
+    const [pageSize, setPageSize] = useState(12); // 每页显示数量
+    const [total, setTotal] = useState(0); // 总数
 
-    async function getBooks() {
-        let data = await getAllBooks(); // 调用后端 API 获取书籍数据
-        let books = data;
-        setBooksData(books); // 保存所有书籍数据（不会变化的数据
-        // console.log(booksData);
-        setBooks(books);
+    const getBooks = async() => {
+        let res = await getBooksByPageandTitle(pageIndex, pageSize, search); // 调用后端 API 获取书籍数据，并设置分页参数
+        let loadbooks = res.data.bookDTOs;
+        let loadTotal = res.data.size;
+        setBooks(loadbooks);
+        setTotal(loadTotal);
+        console.log("books:",loadbooks);
+        console.log("total:",loadTotal);
     }
 
     useEffect(() => {
-        // console.log("mainlog");
         getBooks();
-    }, []);
+    }, [pageIndex, pageSize, search]);
 
-    const onSearch = (value) => {
-        if (!value) {
-            console.log(booksData);
-            setBooks(booksData); // 如果搜索内容为空，则显示所有书籍
-        } else {
-            const filteredBooks = booksData.filter(book => book.title.includes(value)); // 使用 filter 方法过滤书籍列表
-            setBooks(filteredBooks); // 设置过滤后的书籍列表
-        }
+
+    const handleSearch = (value) => {
+        setSearch(value);
+        setPageIndex(1); // 搜索时重置页码为第一页
+    }
+
+    const handlePageChange = (page, size) => {
+        setPageIndex(page);
+        setPageSize(size);
     };
+
     return (
-        <Card id = "myCard" className="card-container" style={{ marginLeft:'200px',padding:2,backgroundColor:'rgba(255,255,255,0.4)'}}>
+        <Card id="myCard" className="card-container" style={{ marginLeft: '200px', padding: 2, backgroundColor: 'rgba(255,255,255,0.4)' }}>
             <Space direction="vertical" size="large" style={{ width: "100%" }}>
                 <Search
                     placeholder="type in the title of the book"
@@ -43,10 +48,9 @@ export default function MainContent() {
                     size="large"
                     // 我不想让搜索栏除了按钮和输入框有其他背景
                     style={{ background: 'none' }}
-                    onSearch={onSearch}
+                    onSearch={handleSearch}
                 />
-                <BookList books={books}/>
-                {/*<BookList books={books} pageSize={pageSize} total={totalPage * pageSize} current={pageIndex + 1} onPageChange={handlePageChange} />*/}
+                <BookList books={books} pageSize={pageSize} total={total} pageIndex={pageIndex} onPageChange={handlePageChange}/>
             </Space>
         </Card>
     );
