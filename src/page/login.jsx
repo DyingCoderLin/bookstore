@@ -23,7 +23,13 @@ const LoginPage = () => {
         const password = document.getElementById("password").value;
         const response = await login(username, password);
         console.log(response);
-        handleBaseApiResponse(response, messageApi, () => navigate("/home"));
+        // localStorage.setItem("isAdmin", response.data.isAdmin);
+        // handleBaseApiResponse(response, messageApi, () => navigate("/home"));
+        //onSuccess的时候还要进行setItem
+        handleBaseApiResponse(response, messageApi, () => {
+            localStorage.setItem("isAdmin", response.data.isAdmin);
+            navigate("/home");
+        });
     };
 
     const toRegister = (event) => {

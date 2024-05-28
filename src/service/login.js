@@ -16,11 +16,11 @@ export async function login(username, password) {
     // return { status: 401, message: "Login failed" };
 }
 
-export async function register(username, password) {
+export async function register(username, password,email) {
     const url = `${PREFIX}/register`;
     let result;
     try {
-        result = await post(url, { username, password });
+        result = await post(url, { username, password,email });
     } catch (e) {
         console.log(e);
         result = {

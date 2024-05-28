@@ -7,6 +7,7 @@ import '../css/global.css';
 import '../css/LoginForm.css';
 import { register } from "../service/login";
 import { handleBaseApiResponse } from "../utils/message";
+import {checkEmail} from "../utils/myUtils";
 
 const RegisterPage = () => {
     const [messageApi, contextHolder] = useMessage();
@@ -17,12 +18,17 @@ const RegisterPage = () => {
         const username = document.getElementById("username").value;
         const password = document.getElementById("password").value;
         const confirmedPassword = document.getElementById("Confirmedpassword").value;
+        const email = document.getElementById("Email").value;
         if (password !== confirmedPassword) {
             messageApi.error("两次输入的密码不一致", 0.8);
             return;
         }
+        else if(!checkEmail(email)){
+            messageApi.error("邮箱格式不正确", 0.8);
+            return;
+        }
         else {
-            const response = await register(username, password);
+            const response = await register(username, password,email);
             console.log(response);
             handleBaseApiResponse(response, messageApi, () => navigate("/login"));
         }
@@ -32,19 +38,23 @@ const RegisterPage = () => {
         <div className="login-container">
             {contextHolder}
             <div className="login-box">
-                <h2>Register</h2>
+                <h2 style={{marginBottom:"8px", }}>Register</h2>
                 <form action="Browser.html" method="get" id="login-form">
-                    <div className="input-group" style={{marginBottom:"10px"}}>
+                    <div className="input-group" style={{marginBottom: "10px"}}>
                         <label htmlFor="username" className="name">Username:</label>
                         <input type="text" id="username" name="username" required/>
                     </div>
-                    <div className="input-group" style={{marginBottom:"10px"}}>
+                    <div className="input-group" style={{marginBottom: "10px"}}>
                         <label htmlFor="password" className="name">Password:</label>
                         <input type="password" id="password" name="password" required/>
                     </div>
-                    <div className="input-group" style={{marginBottom:"10px"}}>
+                    <div className="input-group" style={{marginBottom: "10px"}}>
                         <label htmlFor="confirm password" className="name">Confirm Password:</label>
-                        <input type="password" id="Confirmedpassword" name="ComfirmedConpassword" required/>
+                        <input type="password" id="Confirmedpassword" name="Comfirmedpassword" required/>
+                    </div>
+                    <div className="input-group" style={{marginBottom: "10px"}}>
+                        <label htmlFor="Email" className="name">Email:</label>
+                        <input type="text" id="Email" name="Email" required/>
                     </div>
                     {/*<div>*/}
                     {/*    <input type="checkbox" id="remember-me" name="remember-me" style={{ transform: 'scale(1.5)', float: 'left', marginLeft: '40px', marginTop: '10px' }} />*/}

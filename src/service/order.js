@@ -27,3 +27,16 @@ export async function getAllOrders() {
     }
     return orders;
 }
+
+export async function adminGetAllOrders() {
+    const url = `${PREFIX}/adminGetAllOrders`;
+    let orders;
+    try {
+        orders = await getJson(url);
+        console.log(orders);
+    } catch (e) {
+        console.log(e);
+        orders = []
+    }
+    return orders;
+}

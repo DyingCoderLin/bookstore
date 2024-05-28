@@ -4,33 +4,17 @@ import NavBar from "./navbar";
 import Topbar from "./topbar"; // 导入自己编写的 Topbar 组件
 import { Link, useNavigate } from "react-router-dom";
 import React, { useEffect, useState } from "react";
-// import { getMe } from "../service/user";
-import { UserContext } from "../lib/context";
 import MainContent from "./mainContent";
-// import Booklist from "./book_list";
 import BookContent from "./bookContent";
 import CartContent from "./cartContent";
 import UserContent from "./userContent";
-import BookCart from "./bookCartContext";
+import AdminMainContent from "./adminMainContent";
 import OrderContent from "./orderContent";
+import AdminUserContent from "./adminUserContent";
+import StatContent from "./statContent";
 
 export function BasicLayout({ children }) {
-    // const [user, setUser] = useState(null);
-    // const navigate = useNavigate();
     const HeaderPlaceholder = () => <div style={{ height: '64px' }} />;//空出一块地方作为顶部的空隙，使得顶部可以一直在顶部
-
-    // const checkLogin = async () => {
-    //     let me = await getMe();
-    //     if (!me) {
-    //         navigate("/login");
-    //     } else {
-    //         setUser(me);
-    //     }
-    // }
-
-    // useEffect(() => {
-    //     checkLogin();
-    // }, []);
 
     return (
         <Layout className="basic-layout" style={{ background: 'transparent' }}>
@@ -50,23 +34,9 @@ export function BasicLayout({ children }) {
     )
 }
 
-export function HomeLayout({ children }) {
-    // const [user, setUser] = useState(null);
-    // const navigate = useNavigate();
+export function HomeLayout({}) {
     const HeaderPlaceholder = () => <div style={{ height: '64px' }} />;//空出一块地方作为顶部的空隙，使得顶部可以一直在顶部
-
-    // const checkLogin = async () => {
-    //     let me = await getMe();
-    //     if (!me) {
-    //         navigate("/login");
-    //     } else {
-    //         setUser(me);
-    //     }
-    // }
-
-    // useEffect(() => {
-    //     checkLogin();
-    // }, []);
+    const isAdmin = (localStorage.getItem("isAdmin") === "true");
 
     return (
         <Layout className="basic-layout" style={{ background: 'transparent' }}>
@@ -75,8 +45,7 @@ export function HomeLayout({ children }) {
             <Layout style={{background:'transparent'}}>
                 <Content style={{background:'transparent'}}>
                     <NavBar/>
-                    {/*<UserContext.Provider value={user}>{user && children}</UserContext.Provider>*/}
-                    <MainContent />
+                    {isAdmin ? <AdminMainContent /> : <MainContent />}
                 </Content>
             </Layout>
             {/*<Footer className="footer">*/}
@@ -84,6 +53,10 @@ export function HomeLayout({ children }) {
             {/*</Footer>*/}
         </Layout>
     )
+}
+
+export function BookDetailLayout({ children }) {
+
 }
 
 export function BookLayout({ children }) {
@@ -135,6 +108,7 @@ export function UserLayout({ children }) {
     // const navigate = useNavigate();
     const HeaderPlaceholder = () => <div style={{ height: '64px' }} />;
     const SidebarPlaceholder = () => <div style={{ width: '200px' }} />; // 添加一个宽度为200px的占位符
+    const isAdmin = (localStorage.getItem("isAdmin") === "true");
 
     return (
         <Layout className="basic-layout" style={{ background: 'transparent' }}>
@@ -144,8 +118,8 @@ export function UserLayout({ children }) {
                 <SidebarPlaceholder />
                 <Content style={{background:'transparent'}}>
                     <NavBar/>
-
-                    <UserContent />
+                    {isAdmin ? <AdminUserContent /> : <UserContent />}
+                    {/*<UserContent />*/}
                 </Content>
             </Layout>
         </Layout>
@@ -168,6 +142,27 @@ export function OrderLayout({ children }) {
                     <NavBar/>
 
                     <OrderContent />
+                </Content>
+            </Layout>
+        </Layout>
+    )
+}
+
+export function StatLayout({ children }) {
+    const HeaderPlaceholder = () => <div style={{ height: '64px' }} />;
+    const SidebarPlaceholder = () => <div style={{ width: '200px' }} />; // 添加一个宽度为200px的占位符
+    const isAdmin = (localStorage.getItem("isAdmin") === "true");
+
+    return (
+        <Layout className="basic-layout" style={{ background: 'transparent' }}>
+            <Topbar />
+            <HeaderPlaceholder />
+            <Layout style={{background:'transparent'}}>
+                <SidebarPlaceholder />
+                <Content style={{background:'transparent'}}>
+                    <NavBar/>
+
+                    <StatContent />
                 </Content>
             </Layout>
         </Layout>

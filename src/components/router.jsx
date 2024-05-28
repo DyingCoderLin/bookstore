@@ -7,7 +7,7 @@ import CartPage from "../page/cart";
 import UserPage from "../page/user";
 import OrderPage from "../page/order";
 import RegisterPage from "../page/register";
-// import RankPage from "../page/rank";
+import StatPage from "../page/statistic";
 
 export default function AppRouter() {
     //使用 BrowserRouter 组件包裹整个路由配置，这是 React Router提供的用于启用HTML5历史路由的组件。
@@ -28,7 +28,7 @@ export default function AppRouter() {
             <Route path="/cart" element={<CartPage />} />
             <Route path="/user" element={<UserPage />} />
             <Route path="/order" element={<OrderPage />} />
-            {/*<Route path="/rank" element={<RankPage />} />*/}
+            <Route path="/stat" element={<StatPage />} />
             {/*<Route path="/*" element={<HomePage />} />*/}
         </Routes>
     </BrowserRouter>

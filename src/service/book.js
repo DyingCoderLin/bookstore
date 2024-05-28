@@ -1,6 +1,6 @@
-import {get, getJson, PREFIX} from "./common";
-export async function getBookById(bookId) {
-    const url = `${PREFIX}/getBookById/${bookId}`;
+import {get, getJson, post,PREFIX} from "./common";
+export async function getBookByID(bookID) {
+    const url = `${PREFIX}/getBookByID/${bookID}`;
     console.log(url);
     let book;
     try {
@@ -24,6 +24,44 @@ export async function getAllBooks() {
             items: []
         }
     }
-    // console.log(result);
     return books;
+}
+
+//for administartor
+export async function updateBook(bookID,title,author,isbn,price,inventory) {
+    const url = `${PREFIX}/updateBook`;
+    let result;
+    try {
+        result = await post(url, {bookID,title,author,isbn,price,inventory});
+    } catch (e) {
+        console.log(e);
+        result = null;
+    }
+    return result;
+}
+
+export async function addBook(title,author,isbn,price,inventory) {
+    const url = `${PREFIX}/addBook`;
+    let result;
+    try {
+        result = await post(url, {title,author,isbn,price,inventory});
+    } catch (e) {
+        console.log(e);
+        result = null;
+    }
+    return result;
+
+}
+
+export async function deleteBookByID(bookID) {
+    const url = `${PREFIX}/deleteBookByID/${bookID}`;
+    let result;
+    try {
+        result = await getJson(url);
+    } catch (e) {
+        console.log(e);
+        result = null;
+    }
+    console.log("deleteBookByID",result);
+    return result;
 }

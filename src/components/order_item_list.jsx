@@ -1,10 +1,10 @@
 import { List, Avatar } from "antd"
 
-export default function OrderItemList({ orderItemDatas }) {
-    console.log(orderItemDatas);
+export default function OrderItemList({ orderItemDTOs }) {
+    console.log(orderItemDTOs);
     return <List
         grid={{ gutter: 16, column: 3, xs: 1 }}
-        dataSource={orderItemDatas}
+        dataSource={orderItemDTOs}
         renderItem={(item, _) => (
             <List.Item>
                 <List.Item.Meta

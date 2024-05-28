@@ -16,6 +16,7 @@ export default function HomePage() {
     const keyword = searchParams.get("keyword") || "";
     const pageIndex = searchParams.get("pageIndex") != null ? Number.parseInt(searchParams.get("pageIndex")) : 0;
     const pageSize = searchParams.get("pageSize") != null ? Number.parseInt(searchParams.get("pageSize")) : 10;
+    const isAdmin = (localStorage.getItem("isAdmin") === "true");
 
     const getBooks = async () => {
         // let pagedBooks = await searchBooks(keyword, pageIndex, pageSize);
@@ -43,17 +44,5 @@ export default function HomePage() {
     }
 
     return <HomeLayout>
-        {/*<Card className="card-container">*/}
-        {/*    <Space direction="vertical" size="large" style={{ width: "100%" }}>*/}
-        {/*        <Search*/}
-        {/*            placeholder="input search text"*/}
-        {/*            allowClear*/}
-        {/*            enterButton="Search"*/}
-        {/*            size="large"*/}
-        {/*            // onSearch={onSearch}*/}
-        {/*        />*/}
-        {/*        <BookList books={books} pageSize={pageSize} total={totalPage * pageSize} current={pageIndex + 1} onPageChange={handlePageChange} />*/}
-        {/*    </Space>*/}
-        {/*</Card>*/}
     </HomeLayout>
 }

@@ -1,10 +1,9 @@
 import React, {useEffect ,useState} from 'react';
 import { Card, Button, Row, Col, Image, Typography, Divider, Space, Table } from 'antd';
 import '../css/global.css';
-import { getBookById } from "../service/book";
+import { getBookByID } from "../service/book";
 import { useParams } from "react-router-dom";
 import { addCartItem} from "../service/cart";
-import { BookCartContext} from "./bookCartContext";
 import {handleBaseApiResponse} from "../utils/message";
 import useMessage from "antd/es/message/useMessage";
 // 导入BookCartContext
@@ -17,9 +16,9 @@ export default function BookContent() {
     const [thisBook, setThisBook] = useState([]);
     // const thisBook = getBookById(numericId); // 获取书籍信息
 
-    // const { addToCart } = useContext(BookCartContext); // 使用useContext获取BookCartContext提供的上下文对象，并解构出addToCart函数
     const getBook = async () => {
-        let book = await getBookById( parseInt(id, 10));
+        console.log(id);
+        let book = await getBookByID( parseInt(id, 10));
         setThisBook(book);
     }
 
@@ -56,8 +55,14 @@ export default function BookContent() {
         },
         {
             key: '5',
+            title: '库存',
+            value: thisBook.inventory
+        },
+        {
+            key: '6',
             title: '状态',
-            value: thisBook.status
+            //如果status为false，显示售罄，否则显示在售
+            value: thisBook.status === false ? '售罄' : '在售'
         },
     ];
 

@@ -88,23 +88,18 @@ export default function Cart_item_table({cartItems,onMutate}) {
             onMutate();
         }
         // handleBaseApiResponse(res,messageApi,onMutate);
-            // const existingBookIndex = data.findIndex(item => item.id === book.id);
-            // if (existingBookIndex !== -1) {
-            //     const updatedCart = [...data];
-            //     if(mode)
-            //     data[existingBookIndex].quantity += 1;
-            //     else data[existingBookIndex].quantity = Math.max(0,data[existingBookIndex].quantity - 1);
-            //     setData(updatedCart);
-            // } else {
-            //     // 如果购物车中不存在相同的书籍，添加新的书籍到购物车
-            //     alert("a fatal fault, missing book");
-            // }
     };
 
     const handleCheckboxChange = (record, checked) => {
-        if (checked) {
+        console.log(record);
+        if (checked && record.quantity > record.book.inventory) {
+            messageApi.warning(`库存不足，无法选择书籍 "${record.title}"，现有库存量：${record.book.inventory}`);
+            return;
+        }
+        else if (checked) {
             setSelectCartItems([...selectCartItems, record]);
-        } else {
+        }
+        else {
             setSelectCartItems(selectCartItems.filter(item => item.cartItemID !== record.cartItemID));
         }
     };
