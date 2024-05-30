@@ -2,9 +2,10 @@ package org.example.bookstore.serviceImpl;
 
 import org.example.bookstore.controllers.UserController;
 import org.example.bookstore.dao.UserDao;
-import org.example.bookstore.dto.BookDTO;
-import org.example.bookstore.dto.UserDTO;
+import org.example.bookstore.dto.*;
 import org.example.bookstore.entity.Book;
+import org.example.bookstore.entity.Order;
+import org.example.bookstore.entity.OrderItem;
 import org.example.bookstore.entity.User;
 import org.example.bookstore.utils.MyUtils;
 import org.slf4j.Logger;
@@ -14,9 +15,11 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.example.bookstore.service.UserService;
-import org.example.bookstore.dto.Response;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
@@ -95,5 +98,55 @@ public class UserServiceImpl implements UserService{
 
         Data data = new Data(userDTOs, userDao.countNormalUsers(search));
         return new Response<Data>(200, "查询成功", data);
+    }
+
+    public Response setConsDTOwithOrders(List<Order> orders, Integer page, Integer size){
+        class Data {
+            private List<ConsDTO> ConsDTOs;
+            private int size;
+
+            public Data(List<ConsDTO> ConsDTOs, int size) {
+                this.ConsDTOs = ConsDTOs;
+                this.size = size;
+            }
+
+            //getters
+            public List<ConsDTO> getConsDTOs() {
+                return ConsDTOs;
+            }
+            public int getSize() {
+                return size;
+            }
+        }
+        //遍历所有用户，形成一个userID和ConsDTO的map
+        List<User> users = userDao.findUsersByIsAdminFalse();
+        Map<String, ConsDTO> consDTOMap = new HashMap<>();
+        for(User user : users){
+            String userID = user.getUserID();
+            ConsDTO consDTO = consDTOMap.getOrDefault(userID, new ConsDTO(user));
+            consDTOMap.put(userID, consDTO);
+        }
+
+        for (Order order : orders) {
+            for (OrderItem orderItem : order.getOrderItems()) {
+                String userID = order.getUser().getUserID();
+                ConsDTO consDTO = consDTOMap.get(userID);
+
+                consDTO.addCost(MyUtils.toRMB(orderItem.getPrice()));
+                consDTO.addNum(orderItem.getQuantity());
+            }
+        }
+        List<ConsDTO> consDTOs = new ArrayList<>(consDTOMap.values());
+        //按照购买书籍总量排序
+        consDTOs.sort((a, b) -> b.getTotalNum() - a.getTotalNum());
+        //分页
+        int mySize = consDTOs.size();
+        int fromIndex = (page - 1) * size;
+        int toIndex = Math.min(page * size, mySize);
+        if(fromIndex > mySize){
+            return new Response(400, "");
+        }
+        Data data = new Data(consDTOs.subList(fromIndex, toIndex), mySize);
+        return new Response<Data>(200, "", data);
     }
 }

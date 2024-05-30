@@ -37,4 +37,12 @@ public class OrderDaoImpl implements OrderDao {
     public int countByOrderItemTitleAndDateBetween(String search, Date startDate, Date endDate){
         return (int)orderRepository.countOrdersByOrderItemTitleAndDateBetween(search, startDate, endDate);
     }
+
+    public List<Order> findByUserIdAndDateBetween(Date startDate, Date endDate, String userId){
+        return orderRepository.findByUserIdAndDateBetween(startDate, endDate, userId);
+    }
+
+    public List<Order> findByDateBetween(Date startDate, Date endDate){
+        return orderRepository.findByDateBetween(startDate, endDate);
+    }
 }

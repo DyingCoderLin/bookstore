@@ -41,6 +41,7 @@ public class BookController {
         return bookService.findAll();
     }
 
+
     @PostMapping("/addBook")
     public Response addBook(@RequestBody Map<String,Object> requestBody) {
         final Logger log = LoggerFactory.getLogger(BookController.class);
@@ -152,8 +153,9 @@ public class BookController {
         //读取findAll的前五个并返回
 
         return bookService.findByPageandTitle(page, size,searchTitle);
-//        return bookService.findByPage(page, size);
     }
+
+
 
 }
 

@@ -11,6 +11,10 @@ public class SessionInterceptor implements HandlerInterceptor {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
         HttpSession session = request.getSession(false);
+//        if (session == null) {
+//            // 处理 session 为空的情况，比如重定向到登录页或抛出异常
+//            return false; // 不继续处理请求
+//        }
         System.out.println(session.getId());
 //        System.out.println("SessionInterceptor is invoked");
         System.out.println("Session ID: " + session.getAttribute("userID"));

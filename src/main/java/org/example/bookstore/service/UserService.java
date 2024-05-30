@@ -18,4 +18,6 @@ public interface UserService {
     public List<User> findAll();
 
     public Response findByPageandUserID(Integer page, Integer size, String search);
+
+    public Response setConsDTOwithOrders(List<Order> orders, Integer page, Integer size);
 }

@@ -12,4 +12,5 @@ public interface UserDao {
     List<User> findAll();
     int countNormalUsers(String search);
     Page<User> findUsersByPageandUserID(Pageable pageable, String search);
+    List<User> findUsersByIsAdminFalse();
 }

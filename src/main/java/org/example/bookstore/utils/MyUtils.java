@@ -2,7 +2,10 @@ package org.example.bookstore.utils;
 
 import jakarta.servlet.http.HttpSession;
 import org.example.bookstore.dto.OrderDTO;
+import org.example.bookstore.dto.PurchaseDTO;
+import org.example.bookstore.dto.Response;
 import org.example.bookstore.entity.Order;
+import org.example.bookstore.entity.OrderItem;
 import org.example.bookstore.entity.User;
 import org.springframework.data.relational.core.sql.In;
 import org.springframework.web.context.request.RequestContextHolder;
@@ -11,7 +14,9 @@ import jakarta.servlet.http.HttpServletRequest;
 
 import java.sql.Date;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 
 public class MyUtils {

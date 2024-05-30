@@ -1,6 +1,7 @@
 package org.example.bookstore.controllers;
 
 import jakarta.servlet.http.HttpSession;
+import org.example.bookstore.entity.Order;
 import org.example.bookstore.entity.User;
 import org.example.bookstore.service.*;
 import org.example.bookstore.utils.MyUtils;
@@ -9,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.example.bookstore.dto.*;
 
+import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -20,6 +22,9 @@ public class UserController {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private OrderService orderService;
+
     @PostMapping("/login")
     public Response login(@RequestBody Map<String,Object> loginRequest) {
         final Logger log = org.slf4j.LoggerFactory.getLogger(UserController.class);
@@ -27,6 +32,19 @@ public class UserController {
         String userID = (String) loginRequest.get("username");
         String password = (String) loginRequest.get("password");
         return userService.login(userID, password);
+    }
+
+    @PostMapping("/logout")
+    public Response logout() {
+        final Logger log = org.slf4j.LoggerFactory.getLogger(UserController.class);
+        log.info("Logout Request");
+        HttpSession session = MyUtils.getSession();
+        if (session != null) {
+            session.invalidate();
+        }
+//        if(session.getAttribute("userID") == null) return new Response(400, "未登录");
+//        session.removeAttribute("userID");
+        return new Response(200, "登出成功");
     }
 
     @GetMapping("/getUser")
@@ -124,5 +142,17 @@ public class UserController {
         return new Response(200, "已解禁用户"+userID+"的账户");
     }
 
+    @PostMapping("/statUsersByDate")
+    public Response statUsersByDate(@RequestBody Map<String,Object> requestBody) {
+        final Logger log = org.slf4j.LoggerFactory.getLogger(UserController.class);
+        log.info("Stat Users By Date Request");
+        Date startDate = Date.valueOf((String) requestBody.get("startDate"));
+        Date endDate = Date.valueOf((String) requestBody.get("endDate"));
+        Integer page = (Integer) requestBody.get("page");
+        Integer size = (Integer) requestBody.get("size");
+//        List<User> users = userService.findAll();
+        List<Order> orders = orderService.findByDate(startDate, endDate);
+        return userService.setConsDTOwithOrders(orders, page, size);
+    }
 
 }

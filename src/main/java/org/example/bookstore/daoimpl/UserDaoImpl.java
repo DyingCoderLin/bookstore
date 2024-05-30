@@ -32,4 +32,7 @@ public class UserDaoImpl implements UserDao {
     public Page<User> findUsersByPageandUserID(Pageable pageable, String search) {
         return userRepository.findByIsAdminFalseAndUserIDContaining(pageable, search);
     }
+    public List<User> findUsersByIsAdminFalse() {
+        return userRepository.findUsersByIsAdminFalse();
+    }
 }

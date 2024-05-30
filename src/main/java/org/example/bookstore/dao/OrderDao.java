@@ -15,4 +15,6 @@ public interface OrderDao {
     Page<Order> findOrdersByOrderItemTitleAndUserIdAndDateBetween(String searchText, Date startDate, Date endDate, String userId, Pageable pageable);
     int countByOrderItemTitleAndUserIdAndDateBetween(String search, Date startDate, Date endDate, String userId);
     int countByOrderItemTitleAndDateBetween(String search, Date startDate, Date endDate);
+    List<Order> findByUserIdAndDateBetween(Date startDate, Date endDate, String userId);
+    List<Order> findByDateBetween(Date startDate, Date endDate);
 }

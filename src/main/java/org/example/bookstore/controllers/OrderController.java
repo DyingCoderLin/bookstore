@@ -71,6 +71,33 @@ public class OrderController {
         return new Response(200, "下单成功");
     }
 
+    @PostMapping("/getPurchaseByDate")
+    public Response getPurchasesByDate(@RequestBody Map<String,Object> requestBody) {
+        final Logger log = LoggerFactory.getLogger(BookController.class);
+        HttpSession session = MyUtils.getSession();
+        String userID = (String) session.getAttribute("userID");
+        User user = userService.findByUserID(userID);
+        log.info(userID + " is getting purchases by date");
+        Integer page = (Integer) requestBody.get("page");
+        Integer size = (Integer) requestBody.get("size");
+        Date startDate = Date.valueOf((String) requestBody.get("startDate"));
+        Date endDate = Date.valueOf((String) requestBody.get("endDate"));
+        //使用map暂存每个order中orderitem对应的书籍，如果对应的书籍已经存在，则将其销量加上对应的数量，如果不存在则将其加入map
+        List<Order> orders = orderService.findByUserandDate(user, startDate, endDate);
+        return orderService.mapOrderItemsToPurchaseDTOs(orders);
+    }
+
+    @PostMapping("statBooksByDate")
+    public Response statBooksByDate(@RequestBody Map<String,Object> requestBody){
+        final Logger log = LoggerFactory.getLogger(BookController.class);
+        Date startDate = Date.valueOf((String) requestBody.get("startDate"));
+        Date endDate = Date.valueOf((String) requestBody.get("endDate"));
+        Integer page = (Integer) requestBody.get("page");
+        Integer size = (Integer) requestBody.get("size");
+        List<Order> orders = orderService.findByDate(startDate, endDate);
+        return orderService.getPurchaseDTOswithPageandSize(orders, page, size);
+    }
+
     @GetMapping("/getAllOrders")
     public List<OrderDTO> getAllOrders(){
         final Logger log = LoggerFactory.getLogger(OrderController.class);
