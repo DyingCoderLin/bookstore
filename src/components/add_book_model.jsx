@@ -91,6 +91,28 @@ const AddBookModel = ({ book, onOk, onCancel }) => {
                 </Form.Item>
 
                 <Form.Item
+                    label="简介"
+                    name="description"
+                    rules={[{ required: true, message: '请输入简介!' }]}
+                >
+                    <Input.TextArea
+                        rows={1}
+                        autoSize={false} // 设置为false以禁用自动调整大小
+                    />
+                </Form.Item>
+
+                <Form.Item
+                    label="详细介绍"
+                    name="detail"
+                    rules={[{ required: true, message: '请输入详细介绍!' }]}
+                >
+                    <Input.TextArea
+                        rows={2}
+                        autoSize={false} // 设置为false以禁用自动调整大小
+                    />
+                </Form.Item>
+
+                <Form.Item
                     label="价格"
                     name="price"
                     rules={[{ required: true, message: '请输入价格!' }]}

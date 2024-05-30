@@ -43,11 +43,11 @@ export async function getBooksByPageandTitle(page, size,search) {
 }
 
 //for administartor
-export async function updateBook(bookID,title,author,isbn,price,inventory,img) {
+export async function updateBook(bookID,title,author,isbn,price,inventory,img,detail,description) {
     const url = `${PREFIX}/updateBook`;
     let result;
     try {
-        result = await post(url, {bookID,title,author,isbn,price,inventory,img});
+        result = await post(url, {bookID,title,author,isbn,price,inventory,img,detail,description});
     } catch (e) {
         console.log(e);
         result = null;
@@ -55,11 +55,11 @@ export async function updateBook(bookID,title,author,isbn,price,inventory,img) {
     return result;
 }
 
-export async function addBook(title,author,isbn,price,inventory,img) {
+export async function addBook(title,author,isbn,price,inventory,img,detail,description) {
     const url = `${PREFIX}/addBook`;
     let result;
     try {
-        result = await post(url, {title,author,isbn,price,inventory,img});
+        result = await post(url, {title,author,isbn,price,inventory,img,detail,description});
     } catch (e) {
         console.log(e);
         result = null;
@@ -79,4 +79,32 @@ export async function deleteBookByID(bookID) {
     }
     console.log("deleteBookByID",result);
     return result;
+}
+
+export async function getPurchaseByDate(startDate, endDate) {
+    const url = `${PREFIX}/getPurchaseByDate`;
+    let books;
+    try {
+        books = await post(url, {startDate, endDate});
+    } catch (e) {
+        console.log(e);
+        books = {
+            items: []
+        }
+    }
+    return books;
+}
+
+export async function statBooksByDate(startDate, endDate, page, size) {
+    const url = `${PREFIX}/statBooksByDate`;
+    let books;
+    try {
+        books = await post(url, {startDate, endDate, page, size});
+    } catch (e) {
+        console.log(e);
+        books = {
+            items: []
+        }
+    }
+    return books;
 }

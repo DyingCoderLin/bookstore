@@ -12,6 +12,9 @@ import AdminMainContent from "./adminMainContent";
 import OrderContent from "./orderContent";
 import AdminUserContent from "./adminUserContent";
 import StatContent from "./statContent";
+import AdminStatContent from "./adminStatContent";
+import AdminStatBookContent from "./adminStatBookContent";
+import AdminStatUserContent from "./adminStatUserContent";
 
 export function BasicLayout({ children }) {
     const HeaderPlaceholder = () => <div style={{ height: '64px' }} />;//空出一块地方作为顶部的空隙，使得顶部可以一直在顶部
@@ -71,10 +74,7 @@ export function BookLayout({ children }) {
             <Layout style={{background:'transparent'}}>
                 <Content style={{background:'transparent'}}>
                     <NavBar/>
-                    {/*<UserContext.Provider value={user}>{user && children}</UserContext.Provider>*/}
-                    {/*<BookCart>*/}
                         <BookContent />
-                    {/*</BookCart>*/}
                 </Content>
             </Layout>
         </Layout>
@@ -162,7 +162,47 @@ export function StatLayout({ children }) {
                 <Content style={{background:'transparent'}}>
                     <NavBar/>
 
-                    <StatContent />
+                    {isAdmin ? <AdminStatContent /> : <StatContent />}
+                </Content>
+            </Layout>
+        </Layout>
+    )
+}
+
+export function StatBookLayout({ children }) {
+    const HeaderPlaceholder = () => <div style={{ height: '64px' }} />;
+    const SidebarPlaceholder = () => <div style={{ width: '200px' }} />; // 添加一个宽度为200px的占位符
+
+    return (
+        <Layout className="basic-layout" style={{ background: 'transparent' }}>
+            <Topbar />
+            <HeaderPlaceholder />
+            <Layout style={{background:'transparent'}}>
+                <SidebarPlaceholder />
+                <Content style={{background:'transparent'}}>
+                    <NavBar/>
+
+                    <AdminStatBookContent />
+                </Content>
+            </Layout>
+        </Layout>
+    )
+}
+
+export function StatUserLayout({ children }) {
+    const HeaderPlaceholder = () => <div style={{ height: '64px' }} />;
+    const SidebarPlaceholder = () => <div style={{ width: '200px' }} />; // 添加一个宽度为200px的占位符
+
+    return (
+        <Layout className="basic-layout" style={{ background: 'transparent' }}>
+            <Topbar />
+            <HeaderPlaceholder />
+            <Layout style={{background:'transparent'}}>
+                <SidebarPlaceholder />
+                <Content style={{background:'transparent'}}>
+                    <NavBar/>
+
+                    <AdminStatUserContent />
                 </Content>
             </Layout>
         </Layout>

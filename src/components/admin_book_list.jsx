@@ -76,6 +76,28 @@ export default function AdminBookList({ books, pageIndex, pageSize, total, onPag
         { title: '作者', dataIndex: 'author', key: 'author' },
         { title: 'ISBN', dataIndex: 'isbn', key: 'isbn' },
         {
+            title:"简介",
+            dataIndex:"description",
+            key:"description",
+            width: "10%",
+            render: (text) => (
+                <div style={{ width: "200px", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+                    {text}
+                </div>
+            )
+        },
+        {
+            title:"详细介绍",
+            dataIndex: "detail",
+            key:"detail",
+            width: "20%",
+            render: (text) => (
+                <div style={{ width: "200px", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+                    {text}
+                </div>
+            )
+        },
+        {
             title: '价格',
             dataIndex: 'price',
             key: 'price',

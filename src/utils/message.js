@@ -10,12 +10,12 @@ export async function handleBaseApiResponse(res, messageApi, onSuccess, onFail) 
     if (isOK(res.code)) {
         // 设置cookie到浏览器中
         // if(res.cookie) document.cookie = res.cookie
-        // console.log("success");
+        console.log("success");
         await messageApi.success(res.message, 0.8);
         // console.log("to here");
         onSuccess?.();
     } else {
-        // console.log("error");
+        console.log("error");
         console.log(res.message);
         await messageApi.error(res.message, 0.8);
         onFail?.();

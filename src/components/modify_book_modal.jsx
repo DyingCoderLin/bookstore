@@ -21,11 +21,8 @@ const ModifyBookModal = ({ book, onOk, onCancel }) => {
     };
 
     const handleSubmit = async (values) => {
-        const { title, author, isbn, price, inventory } = values;
-        // console.log("id", book.bookID);
-        console.log(bookImage);
-        console.log(title, author, isbn, price, inventory);
-        let res = await updateBook(book.bookID, title, author, isbn, price, inventory, bookImage);
+        const { title, author, isbn, price, inventory,detail,description } = values;
+        let res = await updateBook(book.bookID, title, author, isbn, price, inventory, bookImage,detail,description);
         handleBaseApiResponse(res, messageApi, onOk);
     };
 
@@ -36,6 +33,8 @@ const ModifyBookModal = ({ book, onOk, onCancel }) => {
             isbn: book.isbn,
             price: book.price,
             inventory: book.inventory,
+            detail: book.detail,
+            description: book.description,
         });
         setBookImage(book.img);
     }, [book, form]);
@@ -92,6 +91,29 @@ const ModifyBookModal = ({ book, onOk, onCancel }) => {
                 >
                     <Input />
                 </Form.Item>
+
+                <Form.Item
+                    label="简介"
+                    name="description"
+                    rules={[{ required: true, message: '请输入简介!' }]}
+                >
+                    <Input.TextArea
+                        rows={1}
+                        autoSize={false} // 设置为false以禁用自动调整大小
+                    />
+                </Form.Item>
+
+                <Form.Item
+                    label="详细介绍"
+                    name="detail"
+                    rules={[{ required: true, message: '请输入详细介绍!' }]}
+                >
+                    <Input.TextArea
+                        rows={2}
+                        autoSize={false} // 设置为false以禁用自动调整大小
+                    />
+                </Form.Item>
+
 
                 <Form.Item
                     label="价格"

@@ -37,7 +37,7 @@ const RegisterPage = () => {
     return (
         <div className="login-container">
             {contextHolder}
-            <div className="login-box">
+            <div className="register-box">
                 <h2 style={{marginBottom:"8px", }}>Register</h2>
                 <form action="Browser.html" method="get" id="login-form">
                     <div className="input-group" style={{marginBottom: "10px"}}>

@@ -9,7 +9,7 @@ export function isOK(value) {
 
 //检查邮箱格式是否正确
 export function checkEmail(email) {
-    const reg = /^([a-zA-Z0-9]+[-_]?)+@[a-zA-Z0-9]+\.[a-z]+$/;
+    const reg = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
     return reg.test(email);
 }
 

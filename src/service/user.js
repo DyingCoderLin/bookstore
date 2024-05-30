@@ -92,3 +92,16 @@ export async function unBanUser(userID) {
     }
     return result;
 }
+
+export async function statUsersByDate(startDate, endDate, page, size) {
+    const url = `${PREFIX}/statUsersByDate`;
+    let result;
+    try {
+        result = await post(url, {startDate, endDate, page, size});
+        console.log(result);
+    } catch (e) {
+        console.log(e);
+        result = []
+    }
+    return result;
+}
