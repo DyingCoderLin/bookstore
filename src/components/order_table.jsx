@@ -2,7 +2,7 @@ import { Table } from "antd";
 import OrderItemList from "./order_item_list";
 // import { formatTime } from "../utils/time";
 
-export default function OrderTable({ orders }) {
+export default function OrderTable({ orders, pageIndex, pageSize, total, onPageChange}) {
     const isAdmin = (localStorage.getItem("isAdmin") === "true");
 
     const adminColumns = [
@@ -46,10 +46,20 @@ export default function OrderTable({ orders }) {
                     <OrderItemList orderItemDTOs={record.orderItemDTOs} />
                 ),
             }}
+            pagination={{
+                current: pageIndex,
+                pageSize: pageSize,
+                total: total,
+                onChange: onPageChange,
+            }}
             dataSource={orders.map(order => ({
                 ...order,
                 key: order.orderID
             }))}
+            // dataSource={(orders || []).map(order => ({
+            //     ...order,
+            //     key: order.orderID
+            // }))}
         />
     )
 }

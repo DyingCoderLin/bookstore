@@ -28,7 +28,7 @@ export default function CartContent() {
         getCartItems();
     }, [pageIndex, pageSize, search]);
 
-    const handleSearch = async (value) => {
+    const handleSearch =  (value) => {
         setSearch(value);
         setPageIndex(1);
     };

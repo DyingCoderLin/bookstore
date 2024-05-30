@@ -44,6 +44,7 @@ export default function Cart_item_table({cartItems,onMutate,handleSearch,pageInd
 
     const handleOrderSubmit = () => {
         setShowModal(false);
+        setSelectCartItems([]);//清空选中的书籍
         onMutate();
     }
 
