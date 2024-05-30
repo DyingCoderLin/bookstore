@@ -31,11 +31,9 @@ CREATE TABLE `order_items` (
   `title` varchar(45) NOT NULL,
   `img` varchar(45) DEFAULT NULL,
   PRIMARY KEY (`order_item_id`),
-  KEY `fk_book_idx` (`book_id`),
   KEY `fk_order_idx` (`order_id`),
-  CONSTRAINT `fk_book` FOREIGN KEY (`book_id`) REFERENCES `books` (`book_id`) ON DELETE RESTRICT ON UPDATE CASCADE,
-  CONSTRAINT `fk_order` FOREIGN KEY (`order_id`) REFERENCES `orders` (`orderid`)
-) ENGINE=InnoDB AUTO_INCREMENT=38 DEFAULT CHARSET=utf8mb3;
+  CONSTRAINT `fk_order` FOREIGN KEY (`order_id`) REFERENCES `orders` (`orderid`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=53 DEFAULT CHARSET=utf8mb3;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -44,7 +42,7 @@ CREATE TABLE `order_items` (
 
 LOCK TABLES `order_items` WRITE;
 /*!40000 ALTER TABLE `order_items` DISABLE KEYS */;
-INSERT INTO `order_items` VALUES (32,16,1,1,1000,'Book 1','/myImages/book2.jpg'),(33,17,1,1,1000,'Book 1','/myImages/book2.jpg'),(34,17,2,1,2000,'Book 2','/myImages/book2.jpg'),(35,17,3,1,3000,'Book 3','/myImages/book2.jpg'),(36,18,2,3,6000,'Book 2','/myImages/book2.jpg'),(37,18,4,1,4000,'Book 4','/myImages/book2.jpg');
+INSERT INTO `order_items` VALUES (36,18,2,3,6000,'Book 2','/myImages/book2.jpg'),(37,18,4,1,4000,'Book 4','/myImages/book2.jpg'),(43,30,6,1,6000,'Book 6','/myImages/book2.jpg'),(44,33,7,1,7000,'Book 7','/myImages/book2.jpg'),(45,34,8,1,10000,'Book 8','/myImages/book2.jpg'),(46,35,9,1,9030,'Book 9','/myImages/book2.jpg'),(47,36,10,1,10000,'Book 10','/myImages/book2.jpg'),(48,37,11,1,11000,'Book 123','/myImages/book2.jpg'),(49,37,12,1,12000,'Book 12','/myImages/book2.jpg'),(50,37,21,1,9024,'Book 21','/myImages/book2.jpg'),(51,37,20,1,20000,'Book 20','/myImages/book2.jpg'),(52,37,14,1,14000,'Book 14','/myImages/book2.jpg');
 /*!40000 ALTER TABLE `order_items` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -57,4 +55,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-05-25 18:33:29
+-- Dump completed on 2024-05-30 23:05:49

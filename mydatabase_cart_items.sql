@@ -31,12 +31,12 @@ CREATE TABLE `cart_items` (
   `img` varchar(45) DEFAULT NULL,
   `title` varchar(45) NOT NULL,
   PRIMARY KEY (`cart_item_id`),
-  KEY `fk_cart_book_id_idx` (`book_id`),
   KEY `fk_user_id_idx` (`user_id`),
   KEY `fk_cart_user_id_idx` (`user_id`),
-  CONSTRAINT `fk_cart_book_id` FOREIGN KEY (`book_id`) REFERENCES `books` (`book_id`) ON DELETE RESTRICT ON UPDATE CASCADE,
+  KEY `fk_book_id_idx` (`book_id`),
+  CONSTRAINT `fk_book_id` FOREIGN KEY (`book_id`) REFERENCES `books` (`book_id`) ON DELETE RESTRICT ON UPDATE CASCADE,
   CONSTRAINT `fk_cart_user_id` FOREIGN KEY (`user_id`) REFERENCES `user_info` (`user_id`) ON DELETE RESTRICT ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=40 DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB AUTO_INCREMENT=87 DEFAULT CHARSET=utf8mb3;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -45,6 +45,7 @@ CREATE TABLE `cart_items` (
 
 LOCK TABLES `cart_items` WRITE;
 /*!40000 ALTER TABLE `cart_items` DISABLE KEYS */;
+INSERT INTO `cart_items` VALUES (78,9030,1,'lin0430',9,'/myImages/book2.jpg','Book 9'),(79,10000,1,'lin0430',10,'/myImages/book2.jpg','Book 10'),(85,2000,1,'lin0430',2,'/myImages/book2.jpg','Book 2'),(86,1000,1,'lin0430',1,'/myImages/book2.jpg','Book 1');
 /*!40000 ALTER TABLE `cart_items` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -57,4 +58,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-05-25 18:33:28
+-- Dump completed on 2024-05-30 23:05:49
