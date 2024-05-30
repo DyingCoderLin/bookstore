@@ -36,5 +36,6 @@ public class OrderDTO {
         for(OrderItem orderItem : order.getOrderItems()){
             orderItemDTOs.add(new OrderItemDTO(orderItem));
         }
+        this.userID = order.getUser().getUserID();
     }
 }

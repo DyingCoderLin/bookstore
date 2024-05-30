@@ -91,6 +91,36 @@ public class OrderController {
         return orders;
     }
 
+    @PostMapping("/getOrdersByTitleandDate")
+    public Response getOrdersByTitleandDate(@RequestBody Map<String, Object> requestBody){
+        final Logger log = LoggerFactory.getLogger(OrderController.class);
+        HttpSession session = MyUtils.getSession();
+        String userID = (String) session.getAttribute("userID");
+        User user = userService.findByUserID(userID);
+        String title = (String) requestBody.get("title");
+        Date startDate = Date.valueOf((String) requestBody.get("startDate"));
+        Date endDate = Date.valueOf((String) requestBody.get("endDate"));
+//        log.info("title: " + title + " startDate: " + startDate + " endDate: " + endDate);
+        Integer page = (Integer) requestBody.get("page");
+        Integer size = (Integer) requestBody.get("size");
+        log.info("page: " + page + " size: " + size);
+        return orderService.findByUserandTitleandDate(title, startDate, endDate, user, page, size);
+    }
+
+    @PostMapping("/adminGetOrdersByTitleandDate")
+    public Response adminGetOrdersByTitleandDate(@RequestBody Map<String, Object> requestBody){
+        final Logger log = LoggerFactory.getLogger(OrderController.class);
+        log.info("Admin is querying Orders");
+        String title = (String) requestBody.get("title");
+        Date startDate = Date.valueOf((String) requestBody.get("startDate"));
+        Date endDate = Date.valueOf((String) requestBody.get("endDate"));
+        Integer page = (Integer) requestBody.get("page");
+        Integer size = (Integer) requestBody.get("size");
+//        log.info("title: " + title + " startDate: " + startDate + " endDate: " + endDate);
+        log.info("page: " + page + " size: " + size);
+        return orderService.findByTitleandDate(title, startDate, endDate, page, size);
+    }
+
     @GetMapping("/adminGetAllOrders")
     public List<OrderDTO> adminGetAllOrders(){
         final Logger log = LoggerFactory.getLogger(OrderController.class);
