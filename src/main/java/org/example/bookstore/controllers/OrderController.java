@@ -50,19 +50,27 @@ public class OrderController {
         orderService.save(order);
         log.info("to here1");
         int totalPrice = 0;
-        CartItem cartItem = null;
+        List<CartItem> cartItems = new ArrayList<>();
+        for (Integer cartItemId : cartItemIds) {
+            CartItem cartItem = cartItemService.findByCartItemId(cartItemId);
+            Book book = cartItem.getCartbook();
+            if(book.getInventory() < cartItem.getQuantity()){
+                return new Response(400, book.getTitle()+"库存不足, "+ "现有库存: " + book.getInventory() + " 请重新下单");
+            }
+            cartItems.add(cartItem);
+        }
         //对应id找到相应的cartItem并放入orderItem中，放入对应的cartItem之后也要将这些cartItem都删除掉，并且对于库存和销量做相应操作
-        for(Integer cartItemId : cartItemIds){
-            cartItem = cartItemService.findByCartItemId(cartItemId);
-            Book book = cartItem.getBook();
+        for(CartItem cartItem : cartItems){
+            Book book = cartItem.getCartbook();
             book.setSales(book.getSales() + cartItem.getQuantity());
 //            Integer leftQuantity = book.getInventory() - cartItem.getQuantity();
             book.setInventory(book.getInventory() - cartItem.getQuantity());
             bookService.save(book);
-            totalPrice += cartItem.getPrice();
-            OrderItem orderItem = new OrderItem(cartItem.getQuantity(),cartItem.getPrice(),cartItem.getTitle(),cartItem.getImg(),cartItem.getBook(),order);
-            cartItemService.delete(cartItem);
+            Integer price = book.getPrice() * cartItem.getQuantity();
+            totalPrice += price;
+            OrderItem orderItem = new OrderItem(cartItem.getQuantity(),price,book.getTitle(), book.getImg(), book,order);
             orderItemService.save(orderItem);
+            cartItemService.delete(cartItem);
         }
         order.setTotalPrice(totalPrice);
         orderService.save(order);
@@ -85,17 +93,6 @@ public class OrderController {
         //使用map暂存每个order中orderitem对应的书籍，如果对应的书籍已经存在，则将其销量加上对应的数量，如果不存在则将其加入map
         List<Order> orders = orderService.findByUserandDate(user, startDate, endDate);
         return orderService.mapOrderItemsToPurchaseDTOs(orders);
-    }
-
-    @PostMapping("statBooksByDate")
-    public Response statBooksByDate(@RequestBody Map<String,Object> requestBody){
-        final Logger log = LoggerFactory.getLogger(BookController.class);
-        Date startDate = Date.valueOf((String) requestBody.get("startDate"));
-        Date endDate = Date.valueOf((String) requestBody.get("endDate"));
-        Integer page = (Integer) requestBody.get("page");
-        Integer size = (Integer) requestBody.get("size");
-        List<Order> orders = orderService.findByDate(startDate, endDate);
-        return orderService.getPurchaseDTOswithPageandSize(orders, page, size);
     }
 
     @GetMapping("/getAllOrders")
@@ -134,8 +131,29 @@ public class OrderController {
         return orderService.findByUserandTitleandDate(title, startDate, endDate, user, page, size);
     }
 
+    @PostMapping("statBooksByDate")
+    public Response statBooksByDate(@RequestBody Map<String,Object> requestBody){
+        HttpSession session = MyUtils.getSession();
+        String userID = (String) session.getAttribute("userID");
+        if(userService.findByUserID(userID).getIsAdmin() == false) {
+            return new Response(401, "非管理员无法统计书籍销量");
+        }
+        final Logger log = LoggerFactory.getLogger(BookController.class);
+        Date startDate = Date.valueOf((String) requestBody.get("startDate"));
+        Date endDate = Date.valueOf((String) requestBody.get("endDate"));
+        Integer page = (Integer) requestBody.get("page");
+        Integer size = (Integer) requestBody.get("size");
+        List<Order> orders = orderService.findByDate(startDate, endDate);
+        return orderService.getPurchaseDTOswithPageandSize(orders, page, size);
+    }
+
     @PostMapping("/adminGetOrdersByTitleandDate")
     public Response adminGetOrdersByTitleandDate(@RequestBody Map<String, Object> requestBody){
+        HttpSession session = MyUtils.getSession();
+        String userID = (String) session.getAttribute("userID");
+        if(userService.findByUserID(userID).getIsAdmin() == false) {
+            return new Response(401, "非管理员无法查询所有订单");
+        }
         final Logger log = LoggerFactory.getLogger(OrderController.class);
         log.info("Admin is querying Orders");
         String title = (String) requestBody.get("title");
@@ -150,6 +168,11 @@ public class OrderController {
 
     @GetMapping("/adminGetAllOrders")
     public List<OrderDTO> adminGetAllOrders(){
+        HttpSession session = MyUtils.getSession();
+        String adminUserID = (String) session.getAttribute("userID");
+        if(userService.findByUserID(adminUserID).getIsAdmin() == false) {
+            return null;
+        }
         final Logger log = LoggerFactory.getLogger(OrderController.class);
         log.info("Admin is querying Orders");
         //遍历所有user的order

@@ -31,7 +31,7 @@ public class CartItemServiceImpl implements CartItemService{
     }
 
     public void delete(CartItem cartItem) {
-        cartItem.detach();
+//        cartItem.detach();
         cartItemDao.delete(cartItem);
     }
 
@@ -45,6 +45,7 @@ public class CartItemServiceImpl implements CartItemService{
         List<CartItemDTO> cartItemDTOs = cartItemPage.getContent().stream()
                 .map(CartItemDTO::new)
                 .collect(Collectors.toList());
+
         class Data {
             public List<CartItemDTO> cartItemDTOs;
             public int size;

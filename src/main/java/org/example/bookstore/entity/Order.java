@@ -30,7 +30,7 @@ public class Order {
     @Column(name = "order_date")
     private Date orderDate;
 
-    @ManyToOne(fetch = FetchType.LAZY,cascade = CascadeType.DETACH)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User orderuser;
 

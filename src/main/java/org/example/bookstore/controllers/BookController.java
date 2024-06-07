@@ -1,8 +1,10 @@
 package org.example.bookstore.controllers;
 
+import jakarta.servlet.http.HttpSession;
 import org.example.bookstore.daoimpl.BookDaoImpl;
 import org.example.bookstore.dto.BookDTO;
 import org.example.bookstore.dto.Response;
+import org.example.bookstore.service.UserService;
 import org.example.bookstore.utils.MyUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,6 +27,9 @@ public class BookController {
     @Autowired
     private CartItemService cartItemService;
 
+    @Autowired
+    private UserService userService;
+
     @GetMapping("/getBookByID/{bookID}")
     public BookDTO getBookById(@PathVariable int bookID) {
         final Logger log = LoggerFactory.getLogger(BookController.class);
@@ -44,6 +49,11 @@ public class BookController {
 
     @PostMapping("/addBook")
     public Response addBook(@RequestBody Map<String,Object> requestBody) {
+        HttpSession session = MyUtils.getSession();
+        String userID = (String) session.getAttribute("userID");
+        if(userService.findByUserID(userID).getIsAdmin() == false) {
+            return new Response(401, "非管理员无法添加书籍");
+        }
         final Logger log = LoggerFactory.getLogger(BookController.class);
         Book book = new Book();
         String title = (String)requestBody.get("title");
@@ -79,13 +89,23 @@ public class BookController {
         if(img != null && !img.equals("")) {
             book.setImg((String) requestBody.get("img"));
         }
+        String description = (String)requestBody.get("description");
+        book.setDescription(description);
+        String detail = (String)requestBody.get("detail");
+        book.setDetail(detail);
         book.setIsAvailable(true);
+        log.info("Adding Book: "+book.getTitle());
         bookService.save(book);
-        return new Response(200, "书籍"+title+"添加成功");
+        return new Response(200, "书籍"+book.getTitle()+"添加成功");
     }
 
     @PostMapping("/updateBook")
     public Response updateBook(@RequestBody Map<String,Object> requestBody) {
+        HttpSession session = MyUtils.getSession();
+        String userID = (String) session.getAttribute("userID");
+        if(userService.findByUserID(userID).getIsAdmin() == false) {
+            return new Response(401, "非管理员无法更新书籍信息");
+        }
         final Logger log = LoggerFactory.getLogger(BookController.class);
         Book book = bookService.findByBookId((Integer) requestBody.get("bookID"));
         log.info("Updating Book: "+book.getTitle());
@@ -128,19 +148,15 @@ public class BookController {
 
     @GetMapping("/deleteBookByID/{bookID}")
     public Response deleteBookByID(@PathVariable int bookID) {
+        HttpSession session = MyUtils.getSession();
+        String userID = (String) session.getAttribute("userID");
+        if(userService.findByUserID(userID).getIsAdmin() == false) {
+            return new Response(401, "非管理员无法删除书籍");
+        }
         final Logger log = LoggerFactory.getLogger(BookController.class);
         log.info("Deleting Book by ID: " + bookID);
         Response response = bookService.deleteByBookID(bookID);
         return response;
-    }
-
-    class Data {
-        public List<BookDTO> bookDTOSs;
-        public int size;
-        public Data(List<BookDTO> bookDTOSs, int size) {
-            this.bookDTOSs = bookDTOSs;
-            this.size = size;
-        }
     }
 
     @PostMapping("/getBooksByPageandTitle")
@@ -151,7 +167,6 @@ public class BookController {
         String searchTitle = (String) requestBody.get("search");
         log.info("Querying Books by Page: "+page+" Size: "+size);
         //读取findAll的前五个并返回
-
         return bookService.findByPageandTitle(page, size,searchTitle);
     }
 

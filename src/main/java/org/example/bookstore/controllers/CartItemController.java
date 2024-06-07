@@ -51,15 +51,15 @@ public class CartItemController {
         //如果该书已经在购物车中
         if(!user.getCartItems().isEmpty()) {
             for (CartItem cartItem : user.getCartItems()) {
-                if (cartItem.getBook().getBookID() == bookId) {
+                if (cartItem.getCartbook().getBookID() == bookId) {
                     return new Response(200, "该书已经在购物车中");
                 }
             }
         }
         CartItem cartItem = new CartItem();
-        cartItem.setBook(book);
-        cartItem.setCart_user(user);
-        cartItem.setPrice(book.getPrice());
+        cartItem.setCartbook(book);
+        cartItem.setCartuser(user);
+//        cartItem.setPrice(book.getPrice());
         cartItemService.save(cartItem);
         return new Response(200, "添加成功");
     }
@@ -111,7 +111,7 @@ public class CartItemController {
         for(CartItem cartItem : cartItems){
             if(cartItem.getCartItemID() == cartItemID){
                 cartItem.setQuantity(quantity);
-                cartItem.setPrice(cartItem.getBook().getPrice() * quantity);
+//                cartItem.setPrice(cartItem.getCartbook().getPrice() * quantity);
                 cartItemService.save(cartItem);
                 return new Response(200, "修改成功");
             }

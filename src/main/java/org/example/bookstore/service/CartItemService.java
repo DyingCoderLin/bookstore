@@ -14,4 +14,5 @@ public interface CartItemService {
     public void delete(CartItem cartItem) ;
     public CartItem findByCartItemId(Integer cartItemID);
     public Response findByPageandTitle(int page, int size, String search, User cartUser);
+
 }

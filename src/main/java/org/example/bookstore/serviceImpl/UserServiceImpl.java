@@ -1,12 +1,10 @@
 package org.example.bookstore.serviceImpl;
 
 import org.example.bookstore.controllers.UserController;
+import org.example.bookstore.dao.UserAuthDao;
 import org.example.bookstore.dao.UserDao;
 import org.example.bookstore.dto.*;
-import org.example.bookstore.entity.Book;
-import org.example.bookstore.entity.Order;
-import org.example.bookstore.entity.OrderItem;
-import org.example.bookstore.entity.User;
+import org.example.bookstore.entity.*;
 import org.example.bookstore.utils.MyUtils;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +25,9 @@ public class UserServiceImpl implements UserService{
     @Autowired
     private UserDao userDao;
 
+    @Autowired
+    private UserAuthDao userAuthDao;
+
     @Override
     public User findByUserID(String userID) {
         return userDao.findByUserID(userID);
@@ -35,26 +36,31 @@ public class UserServiceImpl implements UserService{
     public Response login(String userID, String password) {
         final Logger log = org.slf4j.LoggerFactory.getLogger(UserController.class);
         log.info(userID + " is trying to login" + " with password " + password);
-        MyUtils.setSession(userID);
+
         class ForLogin{
             public boolean isAdmin;
             ForLogin(){
                 isAdmin = false;
             }
         }
+        if (!userAuthDao.existsByUserIDAndPassword(userID, password)) {
+            return new Response(400, "用户名或密码错误");
+        }
+
         User user = userDao.findByUserID(userID);
+
+        if (user == null) {
+            return new Response(400, "用户不存在");
+        }
+
         if(user.getIsBanned()){
             return new Response(400, "您的账户已被封禁");
         }
-        if(user!=null && user.getPassword().equals(password)) {
-            //要将是否为管理员加入Response的data部分再返回
-            ForLogin fl = new ForLogin();
-            fl.isAdmin = user.getIsAdmin();
-            return new Response<ForLogin>(200, "登陆成功", fl);
-        }
-        else{
-            return new Response(400, "用户名或密码错误");
-        }
+        MyUtils.setSession(userID);
+
+        ForLogin fl = new ForLogin();
+        fl.isAdmin = user.getIsAdmin();
+        return new Response<ForLogin>(200, "登陆成功", fl);
     }
 
     public Response register(String userID, String password ,String email) {
@@ -63,8 +69,14 @@ public class UserServiceImpl implements UserService{
         if (userDao.findByUserID(userID) != null) {
             return new Response(400, "用户名已存在");
         }
-        User user = new User(userID, password,false,false, "", "", "", email, "", 0, 1, "", 0);
+//        log.info("to here 0");
+        User user = new User(userID,false,false, "", "", "", 0, 1, "", 0,"",  "");
+//        log.info("to here 1");
         userDao.save(user);
+//        log.info("to here 2");
+        UserAuth userAuth = new UserAuth(user, password);
+//        log.info("to here 3");
+        userAuthDao.save(userAuth);
         return new Response(200, "注册成功");
     }
 
@@ -80,7 +92,6 @@ public class UserServiceImpl implements UserService{
 //        PageRequest pageRequest = PageRequest.of(page - 1, size);
         Pageable pageRequest = PageRequest.of(page - 1, size);
         Page<User> userPage = userDao.findUsersByPageandUserID(pageRequest, search);
-
 
         List<UserDTO> userDTOs = userPage.getContent().stream()
                 .map(UserDTO::new)

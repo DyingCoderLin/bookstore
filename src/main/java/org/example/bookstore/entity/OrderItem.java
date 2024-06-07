@@ -23,11 +23,11 @@ public class OrderItem {
     @Column(name = "img")
     private String img;
 
-    @ManyToOne(fetch = FetchType.LAZY,cascade = CascadeType.DETACH)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "book_id")
     private Book orderbook;
 
-    @ManyToOne(fetch = FetchType.LAZY,cascade = CascadeType.DETACH)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "order_id")
     private Order order;
 
