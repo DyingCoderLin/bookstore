@@ -1,18 +1,27 @@
 import React from 'react';
 import '../css/global.css';
-import { Layout } from 'antd';
+import { Layout,message } from 'antd';
 import {useEffect,useState} from "react";
 import {getUser} from "../service/user";
+import useMessage from "antd/es/message/useMessage";
+import {useNavigate} from "react-router-dom";
 
 const { Header } = Layout;
 
 export default function Topbar() {
     const [userData, setUserData] = useState([]);
+    const navigate = useNavigate();
+
     const initialUser = async () => {
         let user = await getUser();
-        setUserData(user);
-        console.log(user);
+        if( user.code === 401){
+            navigate('/login');
+        }
+        else {
+            setUserData(user);
+        }
     }
+
     useEffect(() => {
         initialUser();
     }, []);

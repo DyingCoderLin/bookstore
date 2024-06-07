@@ -4,13 +4,15 @@ import useMessage from 'antd/es/message/useMessage';
 import { UploadOutlined } from '@ant-design/icons';
 import { updateBook } from '../service/book';
 import { handleBaseApiResponse } from '../utils/message';
+import { useNavigate } from 'react-router-dom';
 
 const ModifyBookModal = ({ book, onOk, onCancel }) => {
     const [messageApi, contextHolder] = useMessage();
     const [form] = Form.useForm();
     const [bookImage, setBookImage] = useState(book.image || null);
+    const { navigate } = useNavigate();
 
-    const handleUpload = async (file) => {
+    const handleUpload = (file) => {
         const reader = new FileReader();
         reader.onload = (e) => {
             const base64Image = e.target.result;
@@ -23,6 +25,10 @@ const ModifyBookModal = ({ book, onOk, onCancel }) => {
     const handleSubmit = async (values) => {
         const { title, author, isbn, price, inventory,detail,description } = values;
         let res = await updateBook(book.bookID, title, author, isbn, price, inventory, bookImage,detail,description);
+        if(res.code === 401){
+            navigate('/login');
+            return;
+        }
         handleBaseApiResponse(res, messageApi, onOk);
     };
 

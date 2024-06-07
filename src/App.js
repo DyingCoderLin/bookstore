@@ -1,7 +1,5 @@
 import { ConfigProvider, theme } from 'antd';
 import AppRouter from './components/router';
-import BookCart from './components/bookCartContext';
-
 function App() {
   const themeToken = {
     colorPrimary: "#1DA57A",

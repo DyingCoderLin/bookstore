@@ -12,6 +12,7 @@ export async function login(username, password) {
             message: "网络错误！",
         }
     }
+    console.log(result);
     return result;
     // return { status: 401, message: "Login failed" };
 }

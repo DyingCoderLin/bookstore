@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import {getAllBooks, getBooksByPageandTitle} from "../service/book";
 import AdminBookList from "./admin_book_list";
+import {message} from "antd";
+import { useNavigate } from 'react-router-dom';
 
 export default function AdminMainContent() {
     const [books, setBooks] = useState([]);
@@ -8,10 +10,15 @@ export default function AdminMainContent() {
     const [pageSize, setPageSize] = useState(5);
     const [total, setTotal] = useState(0);
     const [search, setSearch] = useState('');
+    const navigate = useNavigate();
 
     const initBooks = async (page = 1, size = 5) => {
         // console.log(page, size, search);
         let res = await getBooksByPageandTitle(page, size, search);
+        if(res.code === 401){
+            navigate('/login');
+            return;
+        }
         console.log(res.data);
         let loadBooks = res.data.bookDTOs;
         let totalBooks = res.data.size;

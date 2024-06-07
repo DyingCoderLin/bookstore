@@ -4,6 +4,7 @@ import StatBookTable from "./stat_book_table";
 import {getPurchaseByDate} from "../service/book";
 import {getOrdersByTitleandDate} from "../service/order";
 import {formatDate} from "../utils/myUtils";
+import {useNavigate} from "react-router-dom";
 
 export default function StatContent() {
     const [startDate, setStartDate] = React.useState(null);
@@ -13,6 +14,7 @@ export default function StatContent() {
     // const [pageIndex, setPageIndex] = React.useState(1);
     // const [pageSize, setPageSize] = React.useState(10);
     const [books, setBooks] = React.useState([]);
+    const navigate = useNavigate();
     // const [total, setTotal] = React.useState(0);
 
     const getBooks = async () => {
@@ -26,6 +28,10 @@ export default function StatContent() {
         else
             res = await getPurchaseByDate(formatDate(startDate), formatDate(endDate));
         console.log(res);
+        if(res.code === 401){
+            navigate('/login');
+            return;
+        }
         let loadBooks = res.data.purchaseDTOs;
         let loadTotal = res.data.totalBooks;
         let loadTotalPrice = res.data.totalPrice;

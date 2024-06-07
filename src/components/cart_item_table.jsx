@@ -54,11 +54,11 @@ export default function Cart_item_table({cartItems,onMutate,handleSearch,pageInd
 
     //在选中了一系列书籍并提交订单时，计算总价格
     const computeTotalPrice = () => {
-        let totalPrice = 0;
+        let totalPriceCents = 0;
         for (let cartItem of selectCartItems) {
-            totalPrice += cartItem.price;
+            totalPriceCents += Math.round(cartItem.price * 100);
         }
-        return totalPrice;
+        return (totalPriceCents / 100).toFixed(2);
     }
 
     const handleQuantityChange = async (book, mode) => {
@@ -80,8 +80,8 @@ export default function Cart_item_table({cartItems,onMutate,handleSearch,pageInd
 
     const handleCheckboxChange = (record, checked) => {
         console.log(record);
-        if (checked && record.quantity > record.book.inventory) {
-            messageApi.warning(`库存不足，无法选择书籍 "${record.title}"，现有库存量：${record.book.inventory}`);
+        if (checked && record.quantity > record.inventory) {
+            messageApi.warning(`库存不足，无法选择书籍 "${record.title}"，现有库存量：${record.inventory}`);
             return;
         }
         else if (checked) {
@@ -150,7 +150,14 @@ export default function Cart_item_table({cartItems,onMutate,handleSearch,pageInd
                             />
                         </ColumnGroup>
                         <Column
-                            title="价格"
+                            title="单价"
+                            align={'center'}
+                            dataIndex="singlePrice"
+                            key="singlePrice"
+                            render={(text) => <span style={{fontSize: '1.2rem'}}>￥{text}</span>}
+                        />
+                        <Column
+                            title="总价"
                             align={'center'}
                             dataIndex="price"
                             key="price"

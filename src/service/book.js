@@ -55,7 +55,7 @@ export async function updateBook(bookID,title,author,isbn,price,inventory,img,de
     return result;
 }
 
-export async function addBook(title,author,isbn,price,inventory,img,detail,description) {
+export async function addBook(title,author,isbn,price,inventory,description,detail,img) {
     const url = `${PREFIX}/addBook`;
     let result;
     try {

@@ -1,8 +1,9 @@
 import React, {useEffect} from "react";
-import { DatePicker,Card } from "antd";
+import {DatePicker, Card, Button} from "antd";
 import AdminStatBookTable from "./admin_stat_book_table";
 import {statBooksByDate} from "../service/book";
 import {formatDate,isOK} from "../utils/myUtils";
+import {useNavigate} from "react-router-dom";
 
 export default function AdminStatBookContent() {
     const [startDate, setStartDate] = React.useState(null);
@@ -11,6 +12,7 @@ export default function AdminStatBookContent() {
     const [pageSize, setPageSize] = React.useState(5);
     const [books, setBooks] = React.useState([]);
     const [total, setTotal] = React.useState(0);
+    const {navigate} = useNavigate();
 
     const getBooks = async (isFromOne) => {
         let page = pageIndex;
@@ -25,6 +27,10 @@ export default function AdminStatBookContent() {
         else
             res = await statBooksByDate(formatDate(startDate), formatDate(endDate), page, pageSize);
         console.log(res);
+        if(res.code === 401){
+            navigate('/login');
+            return;
+        }
         if(isOK(res.code)) {
             let loadBooks = res.data.purchaseDTOs;
             let loadTotal = res.data.total;
@@ -49,8 +55,19 @@ export default function AdminStatBookContent() {
         setPageSize(size);
     }
 
+    const handleBack = () => {
+        window.history.back();
+    }
+
     return (
         <Card id="myCard" className="card-container" style={{ padding: 0, backgroundColor: 'rgba(255,255,255,0.4)' }}>
+            <Button
+                type="primary"
+                style={{position: 'absolute', left: '40px', top: '50px'}}
+                onClick={handleBack} // Navigate back
+            >
+                返回
+            </Button>
             <div style={{
                 padding: "0px",
                 // margin: "20px",

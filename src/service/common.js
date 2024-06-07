@@ -1,3 +1,4 @@
+
 /*
     credentials 是用于控制跨域请求中是否发送凭据（如 cookie、HTTP 认证等）的属性。它是一个布尔值属性，可以接受以下三种值：
     "omit"：不包含凭据信息，即不发送 cookie 等凭据。
@@ -8,12 +9,17 @@ export async function getJson(url) {
     // alert(url);
     let res = await fetch(url, { method: "GET", credentials: "include" });
     //解析响应的json数据并返回
-    //res.json只能取一次
+    if (res.status == 401){
+        return {code: 401, message: "登录已过期，请重新登录！"};
+    }
     return res.json();
 }
 
 export async function get(url) {
     let res = await fetch(url, { method: "GET", credentials: "include" });
+    if(res.status === 401){
+        return {code: 401, message: "登录已过期，请重新登录！"};
+    }
     return res;
 }
 
@@ -28,6 +34,10 @@ export async function put(url, data) {
         credentials: "include"
     };
     let res = await fetch(url, opts);
+    if(res.status === 401){
+        return {code: 401, message: "登录已过期，请重新登录！"};
+    }
+    // if (res.status == 200)
     return res.json();
 }
 
@@ -41,6 +51,9 @@ export async function del(url, data) {
         credentials: "include"
     };
     let res = await fetch(url, opts);
+    if(res.status === 401){
+        return {code: 401, message: "登录已过期，请重新登录！"};
+    }
     return res.json();
 }
 
@@ -55,6 +68,10 @@ export async function post(url, data) {
         credentials: "include"
     };
     let res = await fetch(url, opts);
+    console.log(res);
+    if(res.status === 401){
+        return {code: 401, message: "登录已过期，请重新登录！"};
+    }
     return res.json();
 }
 

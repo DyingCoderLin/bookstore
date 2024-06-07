@@ -63,6 +63,11 @@ export default function Sidebar() {
 
     const handleOk = async () => {
         let res = await logout();
+        if(res.code === 401){
+            navigate('/login');
+            // alert(res.message);
+            return;
+        }
         console.log(res);
         // 如果登出成功，则
         if(isOK(res.code)){

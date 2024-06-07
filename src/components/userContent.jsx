@@ -5,14 +5,20 @@ import useMessage from "antd/es/message/useMessage";
 import { UploadOutlined } from '@ant-design/icons';
 import ModifyUserModel from "./modify_user_model";
 import {handleBaseApiResponse} from "../utils/message";
+import { useNavigate } from "react-router-dom";
 
 export default function UserContent() {
     const [messageApi, contextHolder] = useMessage();
     const [user, setUser] = useState({});
     const [showModal, setShowModal] = useState(false);
+    const navigate = useNavigate();
 
     const initialUser = async () => {
         let user = await getUser();
+        if(user.code === 401){
+            navigate('/login');
+            return;
+        }
         setUser(user);
     }
 

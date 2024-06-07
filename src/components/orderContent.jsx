@@ -4,6 +4,7 @@ import OrderTable from "../components/order_table";
 import { getAllOrders,adminGetAllOrders ,getOrdersByTitleandDate,adminGetOrdersByTitleandDate} from "../service/order";
 import { DatePicker, Input } from "antd";
 import {formatDate} from "../utils/myUtils";
+import { useNavigate } from "react-router-dom";
 
 const { Search } = Input;
 
@@ -16,6 +17,7 @@ export default function OrderContent() {
     const [pageSize, setPageSize] = useState(10);
     const [total, setTotal] = useState(0);
     const isAdmin = (localStorage.getItem("isAdmin") === "true");
+    const navigate = useNavigate();
 
     const getOrders = async () => {
         let orders;
@@ -38,6 +40,10 @@ export default function OrderContent() {
                 orders = await adminGetOrdersByTitleandDate(searchText,pageIndex,pageSize, formatDate(startDate));
             else
                 orders = await adminGetOrdersByTitleandDate(searchText,pageIndex,pageSize, formatDate(startDate), formatDate(endDate));
+        }
+        if(orders.code === 401){
+            navigate('/login');
+            return;
         }
         let loadTotal = orders.data.size;
         let loadOrders = orders.data.orderDTOs;

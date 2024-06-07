@@ -72,9 +72,9 @@ export default function AdminBookList({ books, pageIndex, pageSize, total, onPag
                 </div>
             ),
         },
-        { title: '书名', dataIndex: 'title', key: 'title' },
-        { title: '作者', dataIndex: 'author', key: 'author' },
-        { title: 'ISBN', dataIndex: 'isbn', key: 'isbn' },
+        { title: '书名', dataIndex: 'title', key: 'title' ,width: "10%"},
+        { title: '作者', dataIndex: 'author', key: 'author',width: "10%" },
+        { title: 'ISBN', dataIndex: 'isbn', key: 'isbn' ,width: "20%"},
         {
             title:"简介",
             dataIndex:"description",
@@ -103,7 +103,11 @@ export default function AdminBookList({ books, pageIndex, pageSize, total, onPag
             key: 'price',
             render: (text) => <span>￥{text}</span>,
         },
-        { title: '库存量', dataIndex: 'inventory', key: 'inventory' },
+        { title: '库存量',
+            dataIndex: 'inventory',
+            key: 'inventory',
+            width: "10%",
+        },
         {
             title: '删除操作',
             dataIndex: 'action',

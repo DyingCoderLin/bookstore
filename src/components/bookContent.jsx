@@ -6,6 +6,7 @@ import { useParams } from "react-router-dom";
 import { addCartItem} from "../service/cart";
 import {handleBaseApiResponse} from "../utils/message";
 import useMessage from "antd/es/message/useMessage";
+import { useNavigate } from 'react-router-dom';
 // 导入BookCartContext
 
 const { Title, Paragraph } = Typography;
@@ -14,11 +15,16 @@ export default function BookContent() {
     const [messageApi, contextHolder] = useMessage(); // 使用useMessage获取消息API
     let { id } = useParams(); // 从路由参数中获取id，它是字符串类型
     const [thisBook, setThisBook] = useState([]);
+    const navigate = useNavigate();
     // const thisBook = getBookById(numericId); // 获取书籍信息
 
     const getBook = async () => {
         console.log(id);
         let book = await getBookByID( parseInt(id, 10));
+        if(book.code === 401){
+            navigate('/login');
+            return;
+        }
         setThisBook(book);
     }
 

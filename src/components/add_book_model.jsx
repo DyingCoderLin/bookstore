@@ -4,12 +4,14 @@ import useMessage from 'antd/es/message/useMessage';
 import { UploadOutlined } from '@ant-design/icons';
 import { addBook } from '../service/book';
 import { handleBaseApiResponse } from '../utils/message';
+import { useNavigate } from 'react-router-dom';
 
 const AddBookModel = ({ book, onOk, onCancel }) => {
     const [messageApi, contextHolder] = useMessage();
     const [form] = Form.useForm();
     // const [bookImage, setBookImage] = useState(isNew ? null : book?.image || null);
     const [bookImage, setBookImage] = useState({});
+    const navigate = useNavigate();
 
     const handleUpload = async (file) => {
         const reader = new FileReader();
@@ -23,10 +25,15 @@ const AddBookModel = ({ book, onOk, onCancel }) => {
     };
 
     const handleSubmit = async (values) => {
-        const { title, author, isbn, price, inventory } = values;
+        const { title, author, isbn, price, inventory,detail,description } = values;
         console.log(bookImage);
-        console.log(title, author, isbn, price, inventory, bookImage);
-        let res = await addBook({ title, author, isbn, price, inventory, bookImage });
+        console.log(title, author, isbn, price, inventory, description,detail);
+        let res = await addBook(title, author, isbn, price, inventory,description, detail,bookImage);
+        console.log(res);
+        if(res.code === 401){
+            navigate('/login');
+            return;
+        }
         handleBaseApiResponse(res, messageApi, onOk);
     };
 

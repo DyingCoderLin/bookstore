@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import { Card, Input, Space } from 'antd';
+import {Card, Input, Space} from 'antd';
 import '../css/global.css';
 import BookList from "./book_list";
 import { getBooksByPageandTitle } from "../service/book";
+import { useNavigate } from 'react-router-dom';
 
 const { Search } = Input;
 
@@ -12,9 +13,14 @@ export default function MainContent() {
     const [pageIndex, setPageIndex] = useState(1); // 当前页码
     const [pageSize, setPageSize] = useState(12); // 每页显示数量
     const [total, setTotal] = useState(0); // 总数
+    const navigate = useNavigate();
 
     const getBooks = async() => {
         let res = await getBooksByPageandTitle(pageIndex, pageSize, search); // 调用后端 API 获取书籍数据，并设置分页参数
+        if(res.code === 401){
+            navigate('/login');
+            return;
+        }
         let loadbooks = res.data.bookDTOs;
         let loadTotal = res.data.size;
         setBooks(loadbooks);

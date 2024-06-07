@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import Cart_item_table from "./cart_item_table";
 import { getCartItemsByPageAndTitle } from '../service/cart';
+import { useNavigate } from 'react-router-dom';
 
 export default function CartContent() {
     const [cartItems, setCartItems] = useState([]);
@@ -8,9 +9,15 @@ export default function CartContent() {
     const [pageSize, setPageSize] = useState(4);
     const [total, setTotal] = useState(0);
     const [search, setSearch] = useState('');
+    const navigate = useNavigate();
 
     const getCartItems = async () => {
         let res = await getCartItemsByPageAndTitle(pageIndex, pageSize, search);
+        if(res.code === 401){
+            navigate('/login');
+            // alert(res.message);
+            return;
+        }
         console.log(res);
         let loadTotal = res.data.size;
         let loadCartItems = res.data.cartItemDTOs;

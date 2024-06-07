@@ -3,11 +3,13 @@ import React from "react";
 import useMessage from "antd/es/message/useMessage";
 import { placeOrder } from "../service/order";
 import { handleBaseApiResponse } from "../utils/message";
+import { useNavigate } from "react-router-dom";
 
 const { TextArea } = Input;
 export default function PlaceOrderModal({selectBooks, onOk, onCancel }) {
     const [form] = Form.useForm();
     const [messageApi, contextHolder] = useMessage();
+    const navigate = useNavigate();
 
     const handleSubmit = async ({ address, receiver, tel }) => {
         if (!address || !receiver || !tel) {
@@ -22,6 +24,10 @@ export default function PlaceOrderModal({selectBooks, onOk, onCancel }) {
         }
         console.log(orderInfo);
         let res = await placeOrder(orderInfo);
+        if(res.code === 401){
+            navigate('/login');
+            return;
+        }
         // console.log("here");
         handleBaseApiResponse(res, messageApi, onOk);
     };

@@ -4,19 +4,25 @@ import useMessage from "antd/es/message/useMessage";
 import { updateUser } from "../service/user";
 import { handleBaseApiResponse } from "../utils/message";
 import {checkEmail} from "../utils/myUtils";
+import { useNavigate } from 'react-router-dom';
 
 const ModifyUserModel = ({ user, onOK, onCancel }) => {
     const [messageApi, contextHolder] = useMessage();
     const [form] = Form.useForm();
+    const { navigate } = useNavigate();
 
     const handleSubmit = async (values) => {
         const { name, nickname, email, defaultAddress, selfIntro } = values;
-        if(!checkEmail(email)){
+        if(email !== undefined && !checkEmail(email)){
             messageApi.error("邮箱格式错误！");
             return;
         }
         console.log(name, nickname, email, defaultAddress, selfIntro);
         let res = await updateUser(name, nickname, email, defaultAddress, selfIntro);
+        if(res.code === 401){
+            navigate('/login');
+            return;
+        }
         console.log(res);
         await handleBaseApiResponse(res, messageApi, onOK);
     }
