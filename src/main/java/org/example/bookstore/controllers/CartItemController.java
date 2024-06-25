@@ -99,6 +99,29 @@ public class CartItemController {
         return new Response(400, "删除失败");
     }
 
+    @PostMapping("/checkOrder")
+    public Response checkOrder(@RequestBody List<CartItemDTO> requestBody)
+    {
+        List<CartItemDTO> cartItemDTOs = new ArrayList<>();
+        Response response = new Response(200, "");
+        for (CartItemDTO item : requestBody) {
+            Integer cartItemID = (Integer) item.getCartItemID();
+            Double singlePrice = (Double) item.getSinglePrice();
+            Integer quantity = (Integer) item.getQuantity();
+            String title = (String) item.getTitle();
+            CartItem cartItem = cartItemService.findByCartItemId(cartItemID);
+            System.out.println(cartItem.getCartbook().getPrice() + " " + singlePrice);
+            if(!MyUtils.toRMB(cartItem.getCartbook().getPrice()).equals(singlePrice)){
+                response.setMessage(response.getMessage()+"书籍"+title+"价格发生变化\n");
+                item.setSinglePrice(MyUtils.toRMB(cartItem.getCartbook().getPrice()));
+                item.setPrice(MyUtils.toRMB(cartItem.getCartbook().getPrice() * quantity));
+            }
+            cartItemDTOs.add(item);
+        }
+        response.setData(cartItemDTOs);
+        return response;
+    }
+
     @PostMapping("/changeCartItemNumber")
     public Response changeCartItemNumber(@RequestBody Map<String, Integer> requestBody){
         final Logger log = LoggerFactory.getLogger(CartItemController.class);

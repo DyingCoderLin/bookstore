@@ -74,7 +74,7 @@ public class UserServiceImpl implements UserService{
 //        log.info("to here 1");
         userDao.save(user);
 //        log.info("to here 2");
-        UserAuth userAuth = new UserAuth(user, password);
+        UserAuth userAuth = new UserAuth(userID,password);
 //        log.info("to here 3");
         userAuthDao.save(userAuth);
         return new Response(200, "注册成功");
@@ -143,10 +143,11 @@ public class UserServiceImpl implements UserService{
                 String userID = order.getUser().getUserID();
                 ConsDTO consDTO = consDTOMap.get(userID);
 
-                consDTO.addCost(MyUtils.toRMB(orderItem.getPrice()));
+                consDTO.addCost(orderItem.getPrice());
                 consDTO.addNum(orderItem.getQuantity());
             }
         }
+
         List<ConsDTO> consDTOs = new ArrayList<>(consDTOMap.values());
         //按照购买书籍总量排序
         consDTOs.sort((a, b) -> b.getTotalNum() - a.getTotalNum());

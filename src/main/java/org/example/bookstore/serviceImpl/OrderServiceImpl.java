@@ -115,7 +115,8 @@ public class OrderServiceImpl implements OrderService{
                 totalPrice += orderItem.getPrice();
                 totalBooks += orderItem.getQuantity();
                 purchaseDTO.setQuantity(purchaseDTO.getQuantity() + orderItem.getQuantity());
-                purchaseDTO.setPrice(purchaseDTO.getPrice() + MyUtils.toRMB(orderItem.getPrice()));
+//                purchaseDTO.setPrice(purchaseDTO.getPrice() + MyUtils.toRMB(orderItem.getPrice()));
+                purchaseDTO.addPrice(orderItem.getPrice());
                 purchaseMap.put(bookID, purchaseDTO);
             }
         }
@@ -159,7 +160,7 @@ public class OrderServiceImpl implements OrderService{
                 PurchaseDTO purchaseDTO = purchaseMap.getOrDefault(bookID, new PurchaseDTO(orderItem.getBook()));
 
                 purchaseDTO.setQuantity(purchaseDTO.getQuantity() + orderItem.getQuantity());
-                purchaseDTO.setPrice(purchaseDTO.getPrice() + MyUtils.toRMB(orderItem.getPrice()));
+                purchaseDTO.setPrice(purchaseDTO.getPrice() + orderItem.getPrice());
                 purchaseMap.put(bookID, purchaseDTO);
             }
         }

@@ -124,7 +124,7 @@ public class OrderController {
         String title = (String) requestBody.get("title");
         Date startDate = Date.valueOf((String) requestBody.get("startDate"));
         Date endDate = Date.valueOf((String) requestBody.get("endDate"));
-//        log.info("title: " + title + " startDate: " + startDate + " endDate: " + endDate);
+        log.info("title: " + title + " startDate: " + startDate + " endDate: " + endDate);
         Integer page = (Integer) requestBody.get("page");
         Integer size = (Integer) requestBody.get("size");
         log.info("page: " + page + " size: " + size);

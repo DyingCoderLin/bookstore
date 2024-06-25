@@ -21,17 +21,17 @@ public class UserAuth {
 //    @Column(name = "default_address")
 //    private String defaultAddress;
 
-    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
-    @JoinColumn(name = "userid", referencedColumnName = "user_id", insertable = false, updatable = false)
-    private User user;
+//    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
+//    @JoinColumn(name = "userid", referencedColumnName = "user_id", insertable = false, updatable = false)
+//    private User user;
 
     public UserAuth() {
 //        isBanned = false;
     }
 
-    public UserAuth(User user, String password) {
-        this.user = user;
-        this.userID = user.getUserID();
+    public UserAuth(String userID, String password) {
+//        this.user = user;
+        this.userID = userID;
         this.password = password;
 //        this.isBanned = isBanned;
 //        this.email = email;
@@ -41,13 +41,15 @@ public class UserAuth {
     public String getPassword() { return password; }
 //    public Boolean getIsBanned() { return isBanned; }
 //    public String getEmail() { return email; }
-    public User getUser() { return user; }
+//    public User getUser() { return user; }
+    public String getUserID() { return userID; }
 //    public String getDefaultAddress() { return defaultAddress; }
 
     // setters
     public void setPassword(String password) { this.password = password; }
 //    public void setIsBanned(Boolean isBanned) { this.isBanned = isBanned; }
 //    public void setEmail(String email) { this.email = email; }
-    public void setUser(User user) { this.user = user; }
+//    public void setUser(User user) { this.user = user; }
+    public void setUserID(String userID) { this.userID = userID; }
 //    public void setDefaultAddress(String defaultAddress) { this.defaultAddress = defaultAddress; }
 }

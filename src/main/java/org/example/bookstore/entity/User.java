@@ -56,9 +56,9 @@ public class User {
     @OneToMany(mappedBy = "orderuser", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Order> orders;
 
-    @JsonIgnore
-    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private UserAuth userAuth;
+//    @JsonIgnore
+//    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+//    private UserAuth userAuth;
 
     public User() {
         balance = 0;

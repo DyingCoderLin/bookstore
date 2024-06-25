@@ -85,10 +85,17 @@ public class BookController {
         log.info("Price: "+book.getPrice());
         book.setAuthor((String) requestBody.get("author"));
         book.setIsbn((String) requestBody.get("isbn"));
-        String img = (String)requestBody.get("img");
-        if(img != null && !img.equals("")) {
+        Object img = requestBody.get("img");
+        if(img instanceof String) {
             book.setImg((String) requestBody.get("img"));
         }
+        else {
+            book.setImg("");
+        }
+//        String img = (String)requestBody.get("img");
+//        if(img != null && !img.equals("")) {
+//            book.setImg((String) requestBody.get("img"));
+//        }
         String description = (String)requestBody.get("description");
         book.setDescription(description);
         String detail = (String)requestBody.get("detail");
