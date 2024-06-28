@@ -1,5 +1,5 @@
 import { ConfigProvider, theme } from 'antd';
-import AppRouter from './components/router';
+import AppRouter from './router/router';
 function App() {
   const themeToken = {
     colorPrimary: "#1DA57A",

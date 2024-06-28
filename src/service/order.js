@@ -10,8 +10,6 @@ export async function placeOrder(orderInfo) {
     } catch (e) {
         console.log(e);
     }
-    // console.log("res",res);
-    // console.log("res",res.ok);
     return res;
 }
 

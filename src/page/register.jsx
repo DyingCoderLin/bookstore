@@ -30,6 +30,8 @@ const RegisterPage = () => {
         else {
             const response = await register(username, password,email);
             console.log(response);
+            if(response.code === 200)
+                navigate("/login");
             handleBaseApiResponse(response, messageApi, () => navigate("/login"));
         }
     };

@@ -37,7 +37,7 @@ export default function Topbar() {
                 </label>
             </div>
             <div className="user-info">
-                <img src={userData.avatar} className="picInTopbar" alt="头像"
+                <img src={userData.avatar} className="picInTopbar" alt=""
                      width="486"/>
                 <label className="editable-label"
                        style={{fontSize: '20px', fontFamily: 'Arial, sans-serif'}}>用户名：{userData.nickname}</label>

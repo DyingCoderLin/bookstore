@@ -1,20 +1,16 @@
 import {DUMMY_RESPONSE, PREFIX, del, getJson, put, post} from "./common";
 
-export async function getAllCartItems() {
-    const url = `${PREFIX}/getAllCartItems`;//设置url
-    // alert(url);
-    // console.log(document.cookie,"finish");
-    let cartItems;
+export async function checkOrder(cartItemInfo) {
+    const url = `${PREFIX}/checkOrder`;
+    console.log(cartItemInfo);
+    let res;
     try {
-        //向后端发起请求获得cart内容
-        cartItems = await getJson(url);
-        // console.log("normal", cartItems);
+        res = await post(url, cartItemInfo);
+        console.log(res);
     } catch (e) {
-        console.log("getCartItems error", e);
-        cartItems = []
+        console.log(e);
     }
-    // alert(cartItems);
-    return cartItems;
+    return res;
 }
 
 export async function getCartItemsByPageAndTitle(page, size, search) {
@@ -27,7 +23,6 @@ export async function getCartItemsByPageAndTitle(page, size, search) {
         cartItems = [];
     }
     return cartItems;
-
 }
 
 export async function addCartItem(bookId) {

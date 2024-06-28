@@ -54,7 +54,7 @@ const LoginPage = () => {
                             <div>
                                 <input type="checkbox" id="remember-me" name="remember-me" style={{ transform: 'scale(1.5)', float: 'left', marginLeft: '40px', marginTop: '10px' }} />
                                 <label htmlFor="remember-me" style={{ float: 'left', marginTop: '7px', marginLeft: '7px', fontSize: '18px', fontFamily: 'Arial, sans-serif' }}>Remember me</label>
-                                <a href="http://baidu.com" style={{ float: 'left', fontSize: '18px', fontFamily: 'Arial, sans-serif', marginLeft: '130px', textDecoration: 'none', color: 'rgb(0,0,0)', marginTop: '7px' }}>Forgot password?</a>
+                                {/*<a href="http://baidu.com" style={{ float: 'left', fontSize: '18px', fontFamily: 'Arial, sans-serif', marginLeft: '130px', textDecoration: 'none', color: 'rgb(0,0,0)', marginTop: '7px' }}>Forgot password?</a>*/}
                             </div>
                             <button className="button" id="loginButton" type="submit" onClick={onSubmit}>
                                 Log in

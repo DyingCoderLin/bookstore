@@ -122,7 +122,10 @@ const AddBookModel = ({ book, onOk, onCancel }) => {
                 <Form.Item
                     label="价格"
                     name="price"
-                    rules={[{ required: true, message: '请输入价格!' }]}
+                    rules={[
+                        { required: true, message: '请输入价格!' },
+                        { pattern: /^\d+(\.\d{1,2})?$/, message: '请输入合法价格，小数点后最多两位'}
+                    ]}
                 >
                     <Input />
                 </Form.Item>
@@ -130,7 +133,10 @@ const AddBookModel = ({ book, onOk, onCancel }) => {
                 <Form.Item
                     label="库存"
                     name="inventory"
-                    rules={[{ required: true, message: '请输入库存!' }]}
+                    rules={[
+                        { required: true, message: '请输入库存!' },
+                        { pattern: /^\d+$/, message: '请输入合法库存，必须为整数' }
+                    ]}
                 >
                     <Input />
                 </Form.Item>

@@ -24,7 +24,7 @@ const ModifyBookModal = ({ book, onOk, onCancel }) => {
 
     const handleSubmit = async (values) => {
         const { title, author, isbn, price, inventory,detail,description } = values;
-        let res = await updateBook(book.bookID, title, author, isbn, price, inventory, bookImage,detail,description);
+        let res = await updateBook(book.bookID, title, author, isbn, price, inventory, bookImage, detail,description);
         if(res.code === 401){
             navigate('/login');
             return;
@@ -124,7 +124,10 @@ const ModifyBookModal = ({ book, onOk, onCancel }) => {
                 <Form.Item
                     label="价格"
                     name="price"
-                    rules={[{ required: true, message: '请输入价格!' }]}
+                    rules={[
+                        { required: true, message: '请输入价格!' },
+                        { pattern: /^\d+(\.\d{1,2})?$/, message: '请输入合法的价格！' }
+                    ]}
                 >
                     <Input />
                 </Form.Item>
@@ -132,7 +135,10 @@ const ModifyBookModal = ({ book, onOk, onCancel }) => {
                 <Form.Item
                     label="库存"
                     name="inventory"
-                    rules={[{ required: true, message: '请输入库存!' }]}
+                    rules={[
+                        { required: true, message: '请输入库存!' },
+                        { pattern: /^\d+$/, message: '请输入合法库存!' }
+                    ]}
                 >
                     <Input />
                 </Form.Item>

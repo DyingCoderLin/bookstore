@@ -7,6 +7,7 @@ import useMessage from "antd/es/message/useMessage";
 import {changeCartItemNumber, deleteCartItem} from "../service/cart";
 import {handleBaseApiResponse} from "../utils/message";
 import {isOK} from "../utils/myUtils";
+import {checkOrder} from "../service/cart";
 
 const { Column,ColumnGroup } = Table;
 const { Search } = Input;
@@ -16,6 +17,7 @@ export default function Cart_item_table({cartItems,onMutate,handleSearch,pageInd
     const [data, setData] = useState(cartItems);//用于处理要显示哪些信息
     const [selectCartItems,setSelectCartItems] = useState([]);//用于处理哪些书籍被选中
     const [showModal, setShowModal] = useState(false);
+    const [totalPrice,setTotalPrice] = useState(0);
 
     const handleDelete = async (itemId) => {
         console.log(itemId);
@@ -31,9 +33,20 @@ export default function Cart_item_table({cartItems,onMutate,handleSearch,pageInd
     // 当 cartItems 发生变化时，更新 data 状态为新的cartItems
     useEffect(() => {
         setData(cartItems);
-    } , [cartItems]);
+        computeTotalPrice();
+    } , [cartItems,selectCartItems]);
 
-    const handleOpenModal = () => {
+    const handleOpenModal = async() => {
+        onMutate();
+        //将selectCartItem中的书籍信息传入checkOrder函数中
+        console.log(selectCartItems);
+        let res = await checkOrder(selectCartItems);
+        console.log("to here");
+        setSelectCartItems(res.data);
+        if(res.message !== "") {
+            messageApi.info(res.message);
+        }
+        computeTotalPrice();
         if(selectCartItems.length === 0) {
             alert("请先选择要购买的书籍");
             return;
@@ -58,7 +71,8 @@ export default function Cart_item_table({cartItems,onMutate,handleSearch,pageInd
         for (let cartItem of selectCartItems) {
             totalPriceCents += Math.round(cartItem.price * 100);
         }
-        return (totalPriceCents / 100).toFixed(2);
+        setTotalPrice((totalPriceCents / 100).toFixed(2))
+        // return (totalPriceCents / 100).toFixed(2);
     }
 
     const handleQuantityChange = async (book, mode) => {
@@ -94,7 +108,7 @@ export default function Cart_item_table({cartItems,onMutate,handleSearch,pageInd
 
     return <>
         {contextHolder}
-        {showModal && <PlaceOrderModal onCancel={handleCloseModal} selectBooks={selectCartItems} onOk={handleOrderSubmit} />}
+        {showModal && <PlaceOrderModal onCancel={handleCloseModal} selectBooks={selectCartItems} onOk={handleOrderSubmit} price={totalPrice} />}
         <Card id="myCard" className="card-container"
               style={{marginLeft: '200px', padding: 2, backgroundColor: 'rgba(255,255,255,0.4)'}}>
             <Space direction="vertical" size="large" style={{width: "100%"}}>
@@ -110,7 +124,7 @@ export default function Cart_item_table({cartItems,onMutate,handleSearch,pageInd
                     />
                     <Table
                         dataSource={data}
-                        rowKey="id"
+                        rowKey="cartItemID"
                         bordered={true}
                         pagination={{
                             current: pageIndex,
@@ -206,7 +220,7 @@ export default function Cart_item_table({cartItems,onMutate,handleSearch,pageInd
                             marginTop: "10px",
                             marginRight: "20px",
                             marginLeft: "auto",
-                        }}>总价：{computeTotalPrice()}元</h1>
+                        }}>总价：{totalPrice}元</h1>
                         <Button
                             type="primary"
                             onClick={handleOpenModal}

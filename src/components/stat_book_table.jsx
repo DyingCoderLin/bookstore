@@ -56,9 +56,14 @@ export default function StatBookTable({ books }) {
             ),
             dataIndex: 'price',
             key: 'price',
-            render: (text) => <div className="tableFont">
-                <span>￥{text}</span>
-            </div>,
+            render: (text) => {
+                const formattedPrice = (text / 100).toFixed(2);
+                return (
+                    <div className="tableFont">
+                        <span>￥{formattedPrice}</span>
+                    </div>
+                );
+            },
         },
         {   title: (
                 <div style={{ textAlign: 'center' }} className="headFont">

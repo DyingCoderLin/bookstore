@@ -23,6 +23,7 @@ const ModifyUserModel = ({ user, onOK, onCancel }) => {
             navigate('/login');
             return;
         }
+        // 将nickname存入localStorage
         console.log(res);
         await handleBaseApiResponse(res, messageApi, onOK);
     }

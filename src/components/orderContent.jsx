@@ -21,6 +21,7 @@ export default function OrderContent() {
 
     const getOrders = async () => {
         let orders;
+        console.log("getOrders");
         if(!isAdmin){
             if(!startDate && !endDate)
                 orders = await getOrdersByTitleandDate(searchText,pageIndex,pageSize);
@@ -53,7 +54,12 @@ export default function OrderContent() {
 
     useEffect(() => {
         getOrders();
-    }, [searchText, startDate, endDate, pageIndex, pageSize]);
+    }, [pageIndex, pageSize]);
+
+    useEffect(() => {
+        setPageIndex(1);
+        getOrders();
+    }, [searchText, startDate, endDate]);
 
     const handleSearch =  (value) => {
         setSearchText(value);

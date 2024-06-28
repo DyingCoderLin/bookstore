@@ -74,6 +74,12 @@
     background-color: green;
 }
 
+.custom-table .ant-table,
+.custom-table .ant-table-thead > tr > th,
+.custom-table .ant-table-tbody > tr > td {
+    border-color: #000 !important;
+}
+
 .button-red {
     color: white;
     border-color: red;

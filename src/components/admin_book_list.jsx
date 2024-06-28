@@ -101,7 +101,7 @@ export default function AdminBookList({ books, pageIndex, pageSize, total, onPag
             title: '价格',
             dataIndex: 'price',
             key: 'price',
-            render: (text) => <span>￥{text}</span>,
+            render: (text) => <span>￥{parseFloat(text).toFixed(2)}</span>,
         },
         { title: '库存量',
             dataIndex: 'inventory',

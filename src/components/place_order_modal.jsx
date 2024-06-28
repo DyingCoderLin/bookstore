@@ -4,9 +4,10 @@ import useMessage from "antd/es/message/useMessage";
 import { placeOrder } from "../service/order";
 import { handleBaseApiResponse } from "../utils/message";
 import { useNavigate } from "react-router-dom";
+import "../css/global.css";
 
 const { TextArea } = Input;
-export default function PlaceOrderModal({selectBooks, onOk, onCancel }) {
+export default function PlaceOrderModal({selectBooks, onOk, onCancel,price}) {
     const [form] = Form.useForm();
     const [messageApi, contextHolder] = useMessage();
     const navigate = useNavigate();
@@ -91,19 +92,22 @@ export default function PlaceOrderModal({selectBooks, onOk, onCancel }) {
                     columns={columns}
                     dataSource={selectBooks.map(item => ({
                         ...item,
-                        key: item.id,
+                        key: item.cartItemID,
                     }))}
                     pagination={false}
+                    bordered={true}
+                    style={{ marginBottom: 20}}
+                    // className="custom-table"
                 />
-                <Form.Item>
+                <div style={{display: 'flex', justifyContent: 'flex-end', marginRight:20,alignItems: 'center', marginTop: 10}}>
+                    <span style={{fontSize: '1.2rem', fontWeight: 'bold', marginRight: 20}}>总价：￥{price}</span>
                     <Button
                         type="primary"
                         htmlType="submit"
-                        style={{marginTop: 10}}
                     >
-                        提交
+                        下单
                     </Button>
-                </Form.Item>
+                </div>
             </Form>
         </Modal>
     );
