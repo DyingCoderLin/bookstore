@@ -19,12 +19,10 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.example.bookstore.service.OrderService;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.Date;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -59,6 +57,7 @@ public class OrderServiceImpl implements OrderService{
         Page<Order> orderPage = orderDao.findOrdersByOrderItemTitleAndUserIdAndDateBetween(search, startDate, endDate, user.getUserID(), pageRequest);
         List<OrderDTO> orderDTOs = orderPage.getContent().stream()
                 .map(OrderDTO::new)
+                .sorted(Comparator.comparing(OrderDTO::getOrderDate).reversed()) // 根据订单日期降序排序
                 .collect(Collectors.toList());
 //        List<OrderDTO> orderDTOs = MyUtils.getWithinDate(orders, startDate, endDate);
         log.info("to here 0");

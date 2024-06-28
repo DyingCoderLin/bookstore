@@ -11,7 +11,7 @@ import java.sql.Date;
 import java.util.List;
 
 public interface OrderRepository extends JpaRepository<Order, Integer> {
-    @Query("SELECT DISTINCT o FROM Order o JOIN o.orderItems oi WHERE oi.title LIKE %:searchText% AND o.orderDate BETWEEN :startDate AND :endDate")
+    @Query("SELECT DISTINCT o FROM Order o JOIN o.orderItems oi WHERE oi.title LIKE %:searchText% AND o.orderDate BETWEEN :startDate AND :endDate ORDER BY o.orderDate DESC")
     Page<Order> findOrdersByOrderItemTitleAndDateBetween(
             @Param("searchText") String searchText,
             @Param("startDate") Date startDate,
@@ -19,7 +19,7 @@ public interface OrderRepository extends JpaRepository<Order, Integer> {
             Pageable pageable);
 
 
-    @Query("SELECT DISTINCT o FROM Order o JOIN o.orderItems oi WHERE oi.title LIKE %:searchText% AND o.orderDate >= :startDate AND o.orderDate <= :endDate AND o.orderuser.userID = :userId")
+    @Query("SELECT DISTINCT o FROM Order o JOIN o.orderItems oi WHERE oi.title LIKE %:searchText% AND o.orderDate >= :startDate AND o.orderDate <= :endDate AND o.orderuser.userID = :userId ORDER BY o.orderDate DESC")
     Page<Order> findOrdersByOrderItemTitleAndUserIdAndDateBetween(
             @Param("searchText") String searchText,
             @Param("startDate") Date startDate,

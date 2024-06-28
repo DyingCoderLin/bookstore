@@ -30,7 +30,7 @@ public class CartItemDaoImpl implements CartItemDao{
     }
 
     public void delete(CartItem cartItem){
-        cartItemRepository.delete(cartItem);
+        cartItemRepository.deleteByCartItemID(cartItem.getCartItemID());
     }
 
     public int countwithUserIDandTitle(User user, String title){

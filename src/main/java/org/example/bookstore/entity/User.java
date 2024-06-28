@@ -49,11 +49,11 @@ public class User {
     private Boolean isBanned;
 
     @JsonIgnore
-    @OneToMany(mappedBy = "cartuser", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "cartuser", cascade = CascadeType.REMOVE, fetch = FetchType.LAZY)
     private List<CartItem> cartItems;
 
     @JsonIgnore
-    @OneToMany(mappedBy = "orderuser", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "orderuser", cascade = CascadeType.REMOVE, fetch = FetchType.LAZY)
     private List<Order> orders;
 
 //    @JsonIgnore
@@ -61,7 +61,7 @@ public class User {
 //    private UserAuth userAuth;
 
     public User() {
-        balance = 0;
+        balance = 1000000;
         userLevel = 1;
         progress = 0;
     }

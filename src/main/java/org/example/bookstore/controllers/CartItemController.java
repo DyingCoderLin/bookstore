@@ -92,6 +92,7 @@ public class CartItemController {
         List<CartItem> cartItems = user.getCartItems();
         for(CartItem cartItem : cartItems){
             if(cartItem.getCartItemID() == cartItemID){
+                System.out.println("delete" + cartItem.getCartItemID());
                 cartItemService.delete(cartItem);
                 return new Response(200, "删除成功");
             }

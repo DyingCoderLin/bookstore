@@ -70,7 +70,7 @@ public class UserServiceImpl implements UserService{
             return new Response(400, "用户名已存在");
         }
 //        log.info("to here 0");
-        User user = new User(userID,false,false, "", "", "", 0, 1, "", 0,"",  "");
+        User user = new User(userID,false,false, "", "", "", 0, 1, "", 0,email,  "");
 //        log.info("to here 1");
         userDao.save(user);
 //        log.info("to here 2");

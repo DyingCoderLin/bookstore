@@ -12,6 +12,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.example.bookstore.service.CartItemService;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -30,8 +31,8 @@ public class CartItemServiceImpl implements CartItemService{
         cartItemDao.save(cartItem);
     }
 
+    @Transactional
     public void delete(CartItem cartItem) {
-//        cartItem.detach();
         cartItemDao.delete(cartItem);
     }
 

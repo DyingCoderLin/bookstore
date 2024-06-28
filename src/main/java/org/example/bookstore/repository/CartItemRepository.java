@@ -17,4 +17,6 @@ public interface CartItemRepository extends JpaRepository<CartItem, Integer> {
 
     @Query("SELECT COUNT(ci) FROM CartItem ci WHERE ci.cartbook.title LIKE %:title% AND ci.cartuser = :cartuser")
     long countByTitleContainingAndCartuser(@Param("title") String title, @Param("cartuser") User cartuser);
+
+    void deleteByCartItemID(Integer cartItemID);
 }

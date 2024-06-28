@@ -146,6 +146,10 @@ public class BookController {
         book.setAuthor((String) requestBody.get("author"));
         book.setIsbn((String) requestBody.get("isbn"));
         String img = (String)requestBody.get("img");
+        String description = (String)requestBody.get("description");
+        String detail = (String)requestBody.get("detail");
+        book.setDescription(description);
+        book.setDetail(detail);
         if(img != null && !img.equals("")) {
             book.setImg((String) requestBody.get("img"));
         }
