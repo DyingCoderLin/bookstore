@@ -1,5 +1,6 @@
 package org.example.bookstore.service;
 
+import jakarta.servlet.http.HttpSession;
 import org.example.bookstore.entity.*;
 import org.example.bookstore.dto.*;
 
@@ -20,4 +21,6 @@ public interface UserService {
     public Response findByPageandUserID(Integer page, Integer size, String search);
 
     public Response setConsDTOwithOrders(List<Order> orders, Integer page, Integer size);
+
+    public Response logout(HttpSession session);
 }

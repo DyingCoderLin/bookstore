@@ -1,6 +1,7 @@
 package org.example.bookstore.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.persistence.*;
 
 import java.sql.Date;
@@ -35,7 +36,7 @@ public class Order {
     private User orderuser;
 
     @JsonIgnore
-    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<OrderItem> orderItems;
 
     public Order() {
@@ -68,5 +69,50 @@ public class Order {
     public void setTotalPrice(Integer totalPrice) { this.totalPrice = totalPrice; }
     public void setOrderDate(Date orderDate) { this.orderDate = orderDate; }
     public void setUser(User user) { this.orderuser = user; }
+
+    // 从字符串转换为Order对象
+    public static Order fromString(String orderString) {
+        try {
+            ObjectMapper objectMapper = new ObjectMapper();
+            return objectMapper.readValue(orderString, Order.class);
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to parse order from string", e);
+        }
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("{")
+                .append("\"orderID\":").append(orderID).append(",")
+                .append("\"address\":\"").append(address).append("\",")
+                .append("\"receiver\":\"").append(receiver).append("\",")
+                .append("\"tel\":\"").append(tel).append("\",")
+                .append("\"totalPrice\":").append(totalPrice).append(",")
+                .append("\"orderDate\":\"").append(orderDate).append("\",")
+                .append("\"userID\":").append(orderuser != null ? orderuser.getUserID() : null).append(",");
+
+        sb.append("\"orderItems\":[");
+        if (orderItems != null && !orderItems.isEmpty()) {
+            for (int i = 0; i < orderItems.size(); i++) {
+                OrderItem item = orderItems.get(i);
+                sb.append("{")
+                        .append("\"orderItemID\":").append(item.getOrderItemID()).append(",")
+                        .append("\"quantity\":").append(item.getQuantity()).append(",")
+                        .append("\"price\":").append(item.getPrice()).append(",")
+                        .append("\"title\":\"").append(item.getTitle()).append("\",")
+                        .append("\"img\":\"").append(item.getImg()).append("\",")
+                        .append("\"bookID\":").append(item.getBook() != null ? item.getBook().getBookID() : null)
+                        .append("}");
+                if (i < orderItems.size() - 1) {
+                    sb.append(",");
+                }
+            }
+        }
+        sb.append("]");
+        sb.append("}");
+        return sb.toString();
+    }
+
 
 }

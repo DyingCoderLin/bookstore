@@ -8,6 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.Date;
 import java.util.List;
@@ -18,7 +20,9 @@ public class OrderDaoImpl implements OrderDao {
     private OrderRepository orderRepository;
 
     @Override
+    @Transactional(propagation = Propagation.REQUIRED)
     public Order save(Order order) {
+//        int result = 10/0;
         return orderRepository.save(order);
     }
 

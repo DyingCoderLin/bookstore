@@ -5,10 +5,12 @@ import org.example.bookstore.utils.MyUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.web.bind.annotation.*;
 import org.example.bookstore.service.*;
 import org.example.bookstore.entity.*;
 import org.example.bookstore.dto.*;
+import org.springframework.web.context.WebApplicationContext;
 
 import java.sql.Date;
 import java.util.Collections;
@@ -34,50 +36,71 @@ public class OrderController {
     @Autowired
     private BookService bookService;
 
-    @PostMapping("/placeOrder")
-    public Response placeOrder(@RequestBody Map<String, Object> orderInfo){
-        final Logger log = LoggerFactory.getLogger(OrderController.class);
+    @Autowired
+    private KafkaTemplate<String, String> kafkaTemplate; // 引入 KafkaTemplate
+
+    @Autowired
+    private WebApplicationContext applicationContext;
+
+    // 修改为只将订单加入kafka中间件，而不会直接将订单存入数据库
+    @PostMapping(value = "/placeOrder") // 使用 POST 请求来下单
+    public void placeOrder(@RequestBody String orderInfo) {
         HttpSession session = MyUtils.getSession();
         String userID = (String) session.getAttribute("userID");
-        User user = userService.findByUserID(userID);
-        String address = (String) orderInfo.get("address");
-        String receiver = (String) orderInfo.get("receiver");
-        String tel = (String) orderInfo.get("tel");
-        List<Integer> cartItemIds = (List<Integer>) orderInfo.get("cartItemIds");
-        Date orderDate = new Date(System.currentTimeMillis());
-        Order order = new Order(address, receiver, tel, 0, orderDate, user);
-        log.info("to here0");
-        orderService.save(order);
-        log.info("to here1");
-        int totalPrice = 0;
-        List<CartItem> cartItems = new ArrayList<>();
-        for (Integer cartItemId : cartItemIds) {
-            CartItem cartItem = cartItemService.findByCartItemId(cartItemId);
-            Book book = cartItem.getCartbook();
-            if(book.getInventory() < cartItem.getQuantity()){
-                return new Response(400, book.getTitle()+"库存不足, "+ "现有库存: " + book.getInventory() + " 请重新下单");
-            }
-            cartItems.add(cartItem);
-        }
-        //对应id找到相应的cartItem并放入orderItem中，放入对应的cartItem之后也要将这些cartItem都删除掉，并且对于库存和销量做相应操作
-        for(CartItem cartItem : cartItems){
-            Book book = cartItem.getCartbook();
-            book.setSales(book.getSales() + cartItem.getQuantity());
-//            Integer leftQuantity = book.getInventory() - cartItem.getQuantity();
-            book.setInventory(book.getInventory() - cartItem.getQuantity());
-            bookService.save(book);
-            Integer price = book.getPrice() * cartItem.getQuantity();
-            totalPrice += price;
-            OrderItem orderItem = new OrderItem(cartItem.getQuantity(),price,book.getTitle(), book.getImg(), book,order);
-            orderItemService.save(orderItem);
-            cartItemService.delete(cartItem);
-        }
-        order.setTotalPrice(totalPrice);
-        orderService.save(order);
-        user.setBalance(user.getBalance() - totalPrice);
-        userService.save(user);
-        return new Response(200, "下单成功");
+        String updatedOrderInfo = orderInfo.substring(0, orderInfo.length() - 1) +
+                ",\"userID\":\"" + userID + "\"}";
+        // 把userID也加到orderInfo中
+
+        System.out.println("Sending order message: " + updatedOrderInfo);
+        kafkaTemplate.send("orders", updatedOrderInfo); // 将订单信息发送到名为 "orders" 的 Kafka 主题
     }
+
+
+
+//    @PostMapping("/placeOrder")
+//    public Response placeOrder(@RequestBody Map<String, Object> orderInfo){
+//        final Logger log = LoggerFactory.getLogger(OrderController.class);
+//        HttpSession session = MyUtils.getSession();
+//        String userID = (String) session.getAttribute("userID");
+//        User user = userService.findByUserID(userID);
+//        String address = (String) orderInfo.get("address");
+//        String receiver = (String) orderInfo.get("receiver");
+//        String tel = (String) orderInfo.get("tel");
+//        List<Integer> cartItemIds = (List<Integer>) orderInfo.get("cartItemIds");
+//        Date orderDate = new Date(System.currentTimeMillis());
+//        Order order = new Order(address, receiver, tel, 0, orderDate, user);
+//        log.info("to here0");
+//        orderService.save(order);
+//        log.info("to here1");
+//        int totalPrice = 0;
+//        List<CartItem> cartItems = new ArrayList<>();
+//        for (Integer cartItemId : cartItemIds) {
+//            CartItem cartItem = cartItemService.findByCartItemId(cartItemId);
+//            Book book = cartItem.getCartbook();
+//            if(book.getInventory() < cartItem.getQuantity()){
+//                return new Response(400, book.getTitle()+"库存不足, "+ "现有库存: " + book.getInventory() + " 请重新下单");
+//            }
+//            cartItems.add(cartItem);
+//        }
+//        //对应id找到相应的cartItem并放入orderItem中，放入对应的cartItem之后也要将这些cartItem都删除掉，并且对于库存和销量做相应操作
+//        for(CartItem cartItem : cartItems){
+//            Book book = cartItem.getCartbook();
+//            book.setSales(book.getSales() + cartItem.getQuantity());
+////          Integer leftQuantity = book.getInventory() - cartItem.getQuantity();
+//            book.setInventory(book.getInventory() - cartItem.getQuantity());
+//            bookService.save(book);
+//            Integer price = book.getPrice() * cartItem.getQuantity();
+//            totalPrice += price;
+//            OrderItem orderItem = new OrderItem(cartItem.getQuantity(),price,book.getTitle(), book.getImg(), book,order);
+//            orderItemService.save(orderItem);
+//            cartItemService.delete(cartItem);
+//        }
+//        order.setTotalPrice(totalPrice);
+//        orderService.save(order);
+//        user.setBalance(user.getBalance() - totalPrice);
+//        userService.save(user);
+//        return new Response(200, "下单成功");
+//    }
 
     @PostMapping("/getPurchaseByDate")
     public Response getPurchasesByDate(@RequestBody Map<String,Object> requestBody) {

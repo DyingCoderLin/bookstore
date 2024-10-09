@@ -1,18 +1,23 @@
 package org.example.bookstore.serviceImpl;
 
+import jakarta.servlet.http.HttpSession;
 import org.example.bookstore.controllers.UserController;
 import org.example.bookstore.dao.UserAuthDao;
 import org.example.bookstore.dao.UserDao;
 import org.example.bookstore.dto.*;
 import org.example.bookstore.entity.*;
+import org.example.bookstore.service.TimeService;
 import org.example.bookstore.utils.MyUtils;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.example.bookstore.service.UserService;
+import org.springframework.web.context.WebApplicationContext;
+import org.springframework.web.context.annotation.SessionScope;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -21,12 +26,19 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
+//@Scope("session")
 public class UserServiceImpl implements UserService{
     @Autowired
     private UserDao userDao;
 
     @Autowired
     private UserAuthDao userAuthDao;
+
+//    @Autowired
+//    private TimeService timerService;
+
+    @Autowired
+    WebApplicationContext applicationContext;
 
     @Override
     public User findByUserID(String userID) {
@@ -60,7 +72,19 @@ public class UserServiceImpl implements UserService{
 
         ForLogin fl = new ForLogin();
         fl.isAdmin = user.getIsAdmin();
+        TimeService timeService = applicationContext.getBean(TimeService.class);
+        timeService.startTimer();
         return new Response<ForLogin>(200, "登陆成功", fl);
+    }
+
+    public Response logout(HttpSession session) {
+        if (session != null) {
+            TimeService timeService = applicationContext.getBean(TimeService.class);
+            long sessionDuration = timeService.stopTimer();
+            session.invalidate();
+            return new Response(200, "登出成功，会话时长：" + sessionDuration + "秒");
+        }
+        return new Response(400, "未登录");
     }
 
     public Response register(String userID, String password ,String email) {

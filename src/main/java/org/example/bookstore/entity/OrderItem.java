@@ -23,11 +23,11 @@ public class OrderItem {
     @Column(name = "img")
     private String img;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "book_id")
     private Book orderbook;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "order_id")
     private Order order;
 
@@ -60,4 +60,6 @@ public class OrderItem {
     public void setOrder(Order order) { this.order = order; }
     public void setTitle(String title) { this.title = title; }
     public void setImg(String img) { this.img = img; }
+
+
 }

@@ -7,6 +7,7 @@ import org.example.bookstore.service.*;
 import org.example.bookstore.utils.MyUtils;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
 import org.springframework.web.bind.annotation.*;
 import org.example.bookstore.dto.*;
 
@@ -16,6 +17,7 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
+//@Scope("session")
 @RequestMapping("/api") // 指定父路径为/api
 public class UserController {
 
@@ -39,12 +41,15 @@ public class UserController {
         final Logger log = org.slf4j.LoggerFactory.getLogger(UserController.class);
         log.info("Logout Request");
         HttpSession session = MyUtils.getSession();
-        if (session != null) {
-            session.invalidate();
-        }
-//        if(session.getAttribute("userID") == null) return new Response(400, "未登录");
-//        session.removeAttribute("userID");
-        return new Response(200, "登出成功");
+        return userService.logout(session);
+//        if (session != null) {
+//            long sessionDuration = timeService.stopTimer();
+//            session.invalidate();
+//            return new Response(200, "登出成功，会话时长：" + sessionDuration + "秒");
+//        }
+////        if(session.getAttribute("userID") == null) return new Response(400, "未登录");
+////        session.removeAttribute("userID");
+//        return new Response(400, "未登录");
     }
 
     @GetMapping("/getUser")

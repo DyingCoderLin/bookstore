@@ -1,24 +1,26 @@
 package org.example.bookstore.serviceImpl;
 
+import jakarta.servlet.http.HttpSession;
 import org.example.bookstore.controllers.OrderController;
 import org.example.bookstore.dao.OrderDao;
+import org.example.bookstore.dao.OrderItemDao;
 import org.example.bookstore.dto.BookDTO;
 import org.example.bookstore.dto.OrderDTO;
 import org.example.bookstore.dto.PurchaseDTO;
 import org.example.bookstore.dto.Response;
-import org.example.bookstore.entity.Book;
-import org.example.bookstore.entity.Order;
-import org.example.bookstore.entity.OrderItem;
-import org.example.bookstore.entity.User;
+import org.example.bookstore.entity.*;
 import org.example.bookstore.repository.OrderRepository;
+import org.example.bookstore.service.*;
 import org.example.bookstore.utils.MyUtils;
 import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
-import org.example.bookstore.service.OrderService;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.Date;
@@ -30,12 +32,17 @@ public class OrderServiceImpl implements OrderService{
     @Autowired
     private OrderDao orderDao;
     @Autowired
-    private OrderRepository orderRepository;
+    private UserService userService;
+    @Autowired
+    private CartItemService cartItemService;
+    @Autowired
+    private KafkaTemplate<String, String> kafkaTemplate;
+    @Autowired
+    private BookService bookService;
+    @Autowired
+    private OrderItemDao orderItemDao;
 
     @Override
-    public void save(Order order) {
-        orderDao.save(order);
-    }
     public Response findByUserandTitleandDate(String search, Date startDate, Date endDate, User user,Integer page, Integer size){
         class Data {
             public List<OrderDTO> orderDTOs;
@@ -64,6 +71,61 @@ public class OrderServiceImpl implements OrderService{
 //        int mySize = MyUtils.countTotalOrders(orderDao.findAllByTitleAndUserId(search, user.getUserID()), startDate, endDate);
         Data data = new Data(orderDTOs, orderDao.countByOrderItemTitleAndUserIdAndDateBetween(search, startDate, endDate, user.getUserID()));
         return new Response(200, "", data);
+    }
+
+    @Transactional(propagation = Propagation.REQUIRED)
+    public void placeOrder(Map<String,Object> orderInfo) {
+        final Logger log = LoggerFactory.getLogger(OrderController.class);
+        String userID = (String) orderInfo.get("userID");
+//        String userID = "lin0430";
+        User user = userService.findByUserID(userID);
+        log.info("userID" + userID);
+        String address = (String) orderInfo.get("address");
+        String receiver = (String) orderInfo.get("receiver");
+        String tel = (String) orderInfo.get("tel");
+        List<Integer> cartItemIds = (List<Integer>) orderInfo.get("cartItemIds");
+        Date orderDate = new Date(System.currentTimeMillis());
+        Order order = new Order(address, receiver, tel, 0, orderDate, user);
+        log.info("to here0");
+
+        orderDao.save(order);
+        log.info("to here1");
+        int totalPrice = 0;
+        List<CartItem> cartItems = new ArrayList<>();
+        for (Integer cartItemId : cartItemIds) {
+            CartItem cartItem = cartItemService.findByCartItemId(cartItemId);
+            Book book = cartItem.getCartbook();
+            if(book.getInventory() < cartItem.getQuantity()){
+                // 将错误信息写入topic:response_order中，分为code和message两个部分
+                String jsonMessage = "{\"code\":400,\"message\":\"库存不足\",\"userID\":\"" + userID + "\"}";
+                kafkaTemplate.send("responseorder", jsonMessage);
+            }
+            cartItems.add(cartItem);
+        }
+        //对应id找到相应的cartItem并放入orderItem中，放入对应的cartItem之后也要将这些cartItem都删除掉，并且对于库存和销量做相应操作
+        for(CartItem cartItem : cartItems){
+            Book book = cartItem.getCartbook();
+            book.setSales(book.getSales() + cartItem.getQuantity());
+//          Integer leftQuantity = book.getInventory() - cartItem.getQuantity();
+            book.setInventory(book.getInventory() - cartItem.getQuantity());
+            bookService.save(book);
+            Integer price = book.getPrice() * cartItem.getQuantity();
+            totalPrice += price;
+            OrderItem orderItem = new OrderItem(cartItem.getQuantity(),price,book.getTitle(), book.getImg(), book,order);
+            // 调用orderItemDao的save将orderItem存入数据库
+            orderItemDao.save(orderItem);
+            cartItemService.delete(cartItem);
+        }
+        order.setTotalPrice(totalPrice);
+        // 调用orderDao的save将修改后的order存入数据库
+        // 调用orderDao的save将order存入数据库
+        orderDao.save(order);
+        user.setBalance(user.getBalance() - totalPrice);
+        userService.save(user);
+        // 将code200和下单成功写入topic
+        String jsonMessage = "{\"code\":200,\"message\":\"下单成功\",\"userID\":\"" + userID + "\"}";
+        System.out.println("send message: " + jsonMessage);
+        kafkaTemplate.send("responseorder", jsonMessage);
     }
 
     public Response findByTitleandDate(String title,Date startDate, Date endDate,Integer page, Integer size){
